@@ -6,6 +6,10 @@ on:
     - cron: '0 6,18 * * *'
   workflow_dispatch: # 允许随时手动点击运行
 
+# 关键权限声明：允许 Actions 写入并推送代码到仓库
+permissions:
+  contents: write
+
 jobs:
   sync:
     runs-on: ubuntu-latest
