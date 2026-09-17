@@ -45,8 +45,17 @@ def sync_notion_data():
     for page in results:
         props = page.get("properties", {})
         
+        # 智能寻找标题列（无论是 标...、Name、Title 还是 Notion 默认的第一个属性）
+        title_val = ""
+        for key, val in props.items():
+            if val.get("type") == "title":
+                title_val = extract_value(val)
+                break
+        if not title_val:
+            title_val = extract_value(props.get("标...") or props.get("Title") or props.get("Name"))
+
         item = {
-            "Title": extract_value(props.get("标...") or props.get("Title") or props.get("名称")),
+            "Title": title_val,
             "Child": extract_value(props.get("Child")),
             "Subject": extract_value(props.get("Subject") or props.get("科目")),
             "ReviewDate": extract_value(props.get("ReviewDate")),
