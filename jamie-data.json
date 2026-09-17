@@ -1,0 +1,92 @@
+[
+    {
+        "id": "3dee07b9-5005-8079-9bd1-c039fc3295ee",
+        "child": "Jamie",
+        "subject": "数学",
+        "date": "2026-09-17",
+        "nextReviewDate": "2026-09-17",
+        "reasonType": "可可测试3",
+        "title": "无标题",
+        "tags": [
+            "可可测试3"
+        ],
+        "errorCause": "可可测试3",
+        "pitfall": "可可测试3",
+        "analysis": "可可测试3"
+    },
+    {
+        "id": "3dee07b9-5005-8024-8166-effd4a7c0bc6",
+        "child": "Jamie",
+        "subject": "数学",
+        "date": "2026-09-17",
+        "nextReviewDate": "2026-09-17",
+        "reasonType": "可可测试2",
+        "title": "无标题",
+        "tags": [
+            "可可测试2"
+        ],
+        "errorCause": "可可测试2",
+        "pitfall": "可可测试2",
+        "analysis": "可可测试2"
+    },
+    {
+        "id": "3dee07b9-5005-8039-b8a3-f62f041ca712",
+        "child": "Jamie",
+        "subject": "数学",
+        "date": "2026-09-17",
+        "nextReviewDate": "2026-09-17",
+        "reasonType": "测试3",
+        "title": "无标题",
+        "tags": [
+            "测试3"
+        ],
+        "errorCause": "测试3",
+        "pitfall": "测试3",
+        "analysis": "测试3"
+    },
+    {
+        "id": "3dee07b9-5005-80f9-a2a9-d46a37a74450",
+        "child": "Jamie",
+        "subject": "数学",
+        "date": "2026-09-17",
+        "nextReviewDate": "2026-09-17",
+        "reasonType": "测试2",
+        "title": "无标题",
+        "tags": [
+            "测试2"
+        ],
+        "errorCause": "测试2",
+        "pitfall": "测试2",
+        "analysis": "测试2"
+    },
+    {
+        "id": "3dee07b9-5005-807a-87b3-d1119b3f7376",
+        "child": "Jamie",
+        "subject": "数学",
+        "date": "2026-09-17",
+        "nextReviewDate": "2026-09-17",
+        "reasonType": "基础古诗词默写高频易错字形",
+        "title": "无标题",
+        "tags": [
+            "#古诗文默写 #易错字辨析"
+        ],
+        "errorCause": "将“婵娟”的“婵”写成了“蝉”",
+        "pitfall": "与虫子无关，代表月亮和女子，带有“女”字旁。",
+        "analysis": "但愿人长久，千里共婵娟"
+    },
+    {
+        "id": "3dee07b9-5005-80a4-91b2-dcd0a582f5c3",
+        "child": "Jamie",
+        "subject": "数学",
+        "date": "2026-09-17",
+        "nextReviewDate": "2026-09-17",
+        "reasonType": "全库最高频失分模式：平方差接减号，去括号整体变号",
+        "title": "无标题",
+        "tags": [
+            "#整式乘法 #去括号变号"
+        ],
+        "errorCause": "卷面写成 4y-9，去后面括号时符号没变。 (y²-4)-(y²+4y-5)=-4y+1",
+        "pitfall": "前半部分 - 后半部分'时，务必给后半部分整体加括号再变号：-(y²+4y-5)=-y²-4y+5",
+        "analysis": "y²-4-y²-4y+5=-4y+5"
+    }
+]
