@@ -3,143 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jamie 的错题看板</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Jamie 的错题本</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
-        body { font-family: 'Noto+Sans+SC', sans-serif; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fa; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; color: #2c3e50; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid #007bff; }
+        .tag { display: inline-block; background: #e9ecef; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-right: 5px; }
+        .meta { color: #6c757d; font-size: 14px; margin-bottom: 10px; }
+        .nav-btn { text-align: center; margin: 40px 0; }
+        .nav-btn a { text-decoration: none; background: #007bff; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 p-4 md:p-8">
-    <div class="max-w-4xl mx-auto space-y-6">
-        
-        <!-- 顶部标题与统计 -->
-        <header class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-                <span class="px-3 py-1 bg-blue-50 text-blue-600 font-bold rounded-lg text-xs">👤 Jamie · 7年级</span>
-                <h1 class="text-2xl font-bold text-slate-900 mt-2">错题专属看板</h1>
-                <p class="text-xs text-slate-400 mt-1">
-                    状态: <span id="sync-status" class="text-amber-500 font-medium">正在连接 Notion 数据源...</span>
-                </p>
-            </div>
-            <div class="flex gap-3">
-                <div class="bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200/60 text-center">
-                    <div class="text-xs text-slate-400 font-medium">Jamie 错题总数</div>
-                    <div class="text-xl font-bold text-slate-900" id="jamie-total">0</div>
-                </div>
-                <div class="bg-indigo-50/80 px-4 py-2.5 rounded-xl border border-indigo-200 text-center">
-                    <div class="text-xs text-indigo-600 font-medium">🎯 今日待复习</div>
-                    <div class="text-xl font-bold text-indigo-700" id="jamie-today">0</div>
-                </div>
-            </div>
-        </header>
+<body>
 
-        <!-- 错题分类板块容器 -->
-        <main id="subject-container" class="space-y-8">
-            <div class="bg-white p-12 rounded-2xl text-center text-slate-400 border border-slate-100">正在从云端加载错题数据...</div>
-        </main>
+    <h1>📚 Jamie 的错题本</h1>
+    <div id="container">正在加载错题数据...</div>
+
+    <div class="nav-btn">
+        <a href="coco.html">👉 切换到 Coco 的错题本</a>
     </div>
 
     <script>
-        async function loadDataAndRender() {
-            try {
-                const response = await fetch('jamie-data.json');
-                if (!response.ok) throw new Error('数据文件未找到');
-                const jamieQuestions = await response.json();
-                renderJamie(jamieQuestions);
-            } catch (error) {
-                console.warn("未检测到自动同步文件，使用内置默认数据渲染", error);
-                renderJamie([
-                    {
-                        id: 1,
-                        child: "Jamie",
-                        subject: "数学",
-                        date: "2026-09-17",
-                        nextReviewDate: "2026-09-17",
-                        reasonType: "选取理由：等待 GitHub Actions 自动同步",
-                        title: "正在等待云端同步...",
-                        tags: ["#提示"],
-                        errorCause: "暂无",
-                        pitfall: "暂无",
-                        analysis: "暂无"
-                    }
-                ]);
-            }
-        }
+        fetch('jamie-data.json')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('container');
+                // 过滤出 Child 为 Jamie 的数据
+                const jamieData = data.filter(item => item.Child === "Jamie");
+                
+                if (jamieData.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:#888;">暂无 Jamie 的错题记录</p>';
+                    return;
+                }
 
-        function renderJamie(jamieQuestions) {
-            const todayStr = new Date().toISOString().split('T')[0];
-            const itemsToRender = jamieQuestions.filter(q => q.child === "Jamie" || !q.child);
-
-            document.getElementById('jamie-total').textContent = itemsToRender.length;
-            const todayCount = itemsToRender.filter(q => q.nextReviewDate <= todayStr).length;
-            document.getElementById('jamie-today').textContent = todayCount;
-            document.getElementById('sync-status').textContent = "✨ 已连接 Notion 数据源";
-            document.getElementById('sync-status').className = "text-emerald-600 font-medium";
-
-            const container = document.getElementById('subject-container');
-            container.innerHTML = '';
-
-            const subjects = ["数学", "语文", "英语"];
-            let hasAny = false;
-
-            subjects.forEach(sub => {
-                const items = itemsToRender.filter(q => q.subject === sub);
-                if (items.length === 0) return;
-                hasAny = true;
-
-                let html = `
-                    <section class="space-y-4">
-                        <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
-                            <h2 class="text-lg font-bold text-slate-900">📚 ${sub}</h2>
-                            <span class="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-medium">${items.length} 题</span>
+                container.innerHTML = jamieData.map(item => `
+                    <div class="card">
+                        <div class="meta">
+                            科目：<strong>${item.Subject || '无'}</strong> | 复习日：${item.ReviewDate || '无'}
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                `;
-
-                items.forEach(q => {
-                    const isToday = q.nextReviewDate <= todayStr;
-                    html += `
-                        <div class="bg-white rounded-2xl p-5 shadow-xs border border-slate-100 hover:border-indigo-100 transition-all space-y-3">
-                            <div class="flex justify-between items-center text-xs">
-                                ${isToday ? '<span class="px-2.5 py-1 bg-indigo-50 text-indigo-600 font-semibold rounded-md">🎯 今日复习</span>' : '<span></span>'}
-                                <span class="text-slate-400 font-mono">复习日: ${q.nextReviewDate}</span>
-                            </div>
-
-                            <div class="bg-amber-50/60 border-l-2 border-amber-400 p-2.5 rounded-r-xl text-xs text-amber-900 font-medium">
-                                🔘 ${q.reasonType}
-                            </div>
-
-                            <div class="font-semibold text-slate-900 text-sm border-l-4 border-indigo-500 pl-3 py-0.5">
-                                ${q.title}
-                            </div>
-
-                            <div class="flex flex-wrap gap-1.5">
-                                ${q.tags.map(t => `<span class="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded">${t}</span>`).join('')}
-                            </div>
-
-                            <div class="space-y-1.5 text-xs bg-slate-50/80 p-3 rounded-xl">
-                                <div class="text-rose-600 font-medium">❌ ${q.errorCause}</div>
-                                <div class="text-amber-600 font-medium">⚠️ ${q.pitfall}</div>
-                            </div>
-
-                            <div class="bg-emerald-50/60 p-3 rounded-xl text-xs text-emerald-900 font-medium">
-                                ✅ ${q.analysis}
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html += `</div></section>`;
-                container.innerHTML += html;
+                        <h3>${item.Title || '无标题'}</h3>
+                        <p><strong>错误原因：</strong> ${item.Reason || '无'}</p>
+                        <p><strong>知识点：</strong> ${item.Knowledge || '无'}</p>
+                        <p><strong>分析/解析：</strong> ${item.Analysis || '无'}</p>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('container').innerHTML = '<p style="color:red; text-align:center;">加载数据失败，请检查 jamie-data.json 是否存在。</p>';
+                console.error(err);
             });
-
-            if (!hasAny) {
-                container.innerHTML = `<div class="bg-white p-12 rounded-2xl text-center text-slate-400 border border-slate-100">暂无 Jamie 的错题记录 🎉</div>`;
-            }
-        }
-
-        loadDataAndRender();
     </script>
 </body>
 </html>
