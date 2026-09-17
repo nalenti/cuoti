@@ -20,20 +20,19 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git clone --depth=1 https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git .
 
-      - name: 2. 执行 Python 脚本抓取 Notion 并生成 JSON
+      - name: 2. 安装依赖并运行 Notion 同步脚本
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           DATABASE_ID: ${{ secrets.DATABASE_ID }}
         run: |
+          pip install requests
           python3 -c '
-          import urllib.request
+          import requests
           import json
           import os
 
           token = os.environ.get("NOTION_TOKEN", "").strip()
           db_id = os.environ.get("DATABASE_ID", "").strip()
-
-          print(f"DEBUG: Database ID length: {len(db_id)}, Token length: {len(token)}")
 
           url = f"https://api.notion.com/v1/databases/{db_id}/query"
           headers = {
@@ -42,60 +41,55 @@ jobs:
               "Content-Type": "application/json"
           }
 
-          # Notion 查询接口需要传入一个空的 JSON 对象 {}
-          req_data = json.dumps({}).encode("utf-8")
-          req = urllib.request.Request(url, data=req_data, headers=headers, method="POST")
-          
-          try:
-              with urllib.request.urlopen(req) as response:
-                  res_data = json.loads(response.read().decode("utf-8"))
+          print(f"正在请求 Notion 数据库: {db_id}")
+          response = requests.post(url, headers=headers, json={})
+
+          if response.status_code != 200:
+              print(f"❌ 请求失败，状态码: {response.status_code}")
+              print(f"错误详情: {response.text}")
+              exit(1)
+
+          res_data = response.json()
+          parsed_questions = []
+
+          for page in res_data.get("results", []):
+              props = page.get("properties", {})
+              try:
+                  name = props.get("Name", {}).get("title", [])
+                  title_text = name[0]["plain_text"] if name else "无标题"
                   
-                  parsed_questions = []
-                  for page in res_data.get("results", []):
-                      props = page.get("properties", {})
-                      try:
-                          name = props.get("Name", {}).get("title", [])
-                          title_text = name[0]["plain_text"] if name else "无标题"
-                          
-                          child_select = props.get("Child", {}).get("select")
-                          child = child_select["name"] if child_select else "Jamie"
-                          
-                          subject_select = props.get("Subject", {}).get("select")
-                          subject = subject_select["name"] if subject_select else "数学"
-                          
-                          date_obj = props.get("ReviewDate", {}).get("date")
-                          review_date = date_obj["start"] if date_obj else "2026-09-17"
-                          
-                          def get_text(prop_name):
-                              rich = props.get(prop_name, {}).get("rich_text", [])
-                              return rich[0]["plain_text"] if rich else ""
+                  child_select = props.get("Child", {}).get("select")
+                  child = child_select["name"] if child_select else "Jamie"
+                  
+                  subject_select = props.get("Subject", {}).get("select")
+                  subject = subject_select["name"] if subject_select else "数学"
+                  
+                  date_obj = props.get("ReviewDate", {}).get("date")
+                  review_date = date_obj["start"] if date_obj else "2026-09-17"
+                  
+                  def get_text(prop_name):
+                      rich = props.get(prop_name, {}).get("rich_text", [])
+                      return rich[0]["plain_text"] if rich else ""
 
-                          parsed_questions.append({
-                              "id": page["id"],
-                              "child": child,
-                              "subject": subject,
-                              "date": review_date,
-                              "nextReviewDate": review_date,
-                              "reasonType": get_text("Reason"),
-                              "title": title_text,
-                              "tags": [get_text("Knowledge")] if get_text("Knowledge") else [],
-                              "errorCause": get_text("ErrorCause"),
-                              "pitfall": get_text("Pitfall"),
-                              "analysis": get_text("Analysis")
-                          })
-                      except Exception as e:
-                          print(f"解析某行出错: {e}")
+                  parsed_questions.append({
+                      "id": page["id"],
+                      "child": child,
+                      "subject": subject,
+                      "date": review_date,
+                      "nextReviewDate": review_date,
+                      "reasonType": get_text("Reason"),
+                      "title": title_text,
+                      "tags": [get_text("Knowledge")] if get_text("Knowledge") else [],
+                      "errorCause": get_text("ErrorCause"),
+                      "pitfall": get_text("Pitfall"),
+                      "analysis": get_text("Analysis")
+                  })
+              except Exception as e:
+                  print(f"解析某行数据出错: {e}")
 
-                  with open("jamie-data.json", "w", encoding="utf-8") as f:
-                      json.dump(parsed_questions, f, ensure_ascii=False, indent=4)
-                  print("🎉 Notion 数据抓取并生成 JSON 成功！")
-          except urllib.error.HTTPError as e:
-              print(f"HTTP 错误码: {e.code}")
-              print(f"错误详情: {e.read().decode(\"utf-8\")}")
-              exit(1)
-          except Exception as e:
-              print(f"其他请求失败: {e}")
-              exit(1)
+          with open("jamie-data.json", "w", encoding="utf-8") as f:
+              json.dump(parsed_questions, f, ensure_ascii=False, indent=4)
+          print("🎉 Notion 数据同步成功，已生成 jamie-data.json！")
           '
 
       - name: 3. 提交并推送更新后的 JSON 文件
