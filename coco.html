@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coco 的错题本</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fa; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; color: #2c3e50; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid #28a745; }
+        .meta { color: #6c757d; font-size: 14px; margin-bottom: 10px; }
+        .nav-btn { text-align: center; margin: 40px 0; }
+        .nav-btn a { text-decoration: none; background: #28a745; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>📚 Coco 的错题本</h1>
+    <div id="container">正在加载错题数据...</div>
+
+    <div class="nav-btn">
+        <a href="index.html">👉 切换到 Jamie 的错题本</a>
+    </div>
+
+    <script>
+        fetch('jamie-data.json')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('container');
+                // 过滤出 Child 为 Coco 的数据
+                const cocoData = data.filter(item => item.Child === "Coco");
+                
+                if (cocoData.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:#888;">暂无 Coco 的错题记录</p>';
+                    return;
+                }
+
+                container.innerHTML = cocoData.map(item => `
+                    <div class="card">
+                        <div class="meta">
+                            科目：<strong>${item.Subject || '无'}</strong> | 复习日：${item.ReviewDate || '无'}
+                        </div>
+                        <h3>${item.Title || '无标题'}</h3>
+                        <p><strong>错误原因：</strong> ${item.Reason || '无'}</p>
+                        <p><strong>知识点：</strong> ${item.Knowledge || '无'}</p>
+                        <p><strong>分析/解析：</strong> ${item.Analysis || '无'}</p>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('container').innerHTML = '<p style="color:red; text-align:center;">加载数据失败，请检查 jamie-data.json 是否存在。</p>';
+                console.error(err);
+            });
+    </script>
+</body>
+</html>
