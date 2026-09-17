@@ -1,0 +1,108 @@
+<script>
+        // 异步从本地或云端生成的 JSON 文件自动读取最新数据
+        async function loadDataAndRender() {
+            try {
+                // 读取自动生成的 json 数据
+                const response = await fetch('jamie-data.json');
+                if (!response.ok) throw new Error('数据文件未找到');
+                const jamieQuestions = await response.json();
+                
+                renderJamie(jamieQuestions);
+            } catch (error) {
+                console.warn("未检测到自动同步文件，使用内置默认数据渲染", error);
+                // 降级使用兜底数据
+                renderJamie([
+                    {
+                        id: 1,
+                        child: "Jamie",
+                        subject: "数学",
+                        date: "2026-09-17",
+                        nextReviewDate: "2026-09-17",
+                        reasonType: "选取理由：请先运行同步脚本生成数据",
+                        title: "等待同步...",
+                        tags: ["#提示"],
+                        errorCause: "暂无",
+                        pitfall: "暂无",
+                        analysis: "暂无"
+                    }
+                ]);
+            }
+        }
+
+        function renderJamie(jamieQuestions) {
+            const todayStr = new Date().toISOString().split('T')[0];
+            
+            // 只筛选出属于 Jamie 的题目
+            const itemsToRender = jamieQuestions.filter(q => q.child === "Jamie");
+
+            document.getElementById('jamie-total').textContent = itemsToRender.length;
+            const todayCount = itemsToRender.filter(q => q.nextReviewDate <= todayStr).length;
+            document.getElementById('jamie-today').textContent = todayCount;
+            document.getElementById('sync-status').textContent = "✨ 已连接 Notion 数据库";
+            document.getElementById('sync-status').className = "text-emerald-600 font-medium";
+
+            const container = document.getElementById('subject-container');
+            container.innerHTML = '';
+
+            const subjects = ["数学", "语文", "英语"];
+            let hasAny = false;
+
+            subjects.forEach(sub => {
+                const items = itemsToRender.filter(q => q.subject === sub);
+                if (items.length === 0) return;
+                hasAny = true;
+
+                let html = `
+                    <section class="space-y-4">
+                        <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+                            <h2 class="text-lg font-bold text-slate-900">📚 ${sub}</h2>
+                            <span class="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-medium">${items.length} 题</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                `;
+
+                items.forEach(q => {
+                    const isToday = q.nextReviewDate <= todayStr;
+                    html += `
+                        <div class="bg-white rounded-2xl p-5 shadow-xs border border-slate-100 hover:border-indigo-100 transition-all space-y-3">
+                            <div class="flex justify-between items-center text-xs">
+                                ${isToday ? '<span class="px-2.5 py-1 bg-indigo-50 text-indigo-600 font-semibold rounded-md">🎯 今日复习</span>' : '<span></span>'}
+                                <span class="text-slate-400 font-mono">复习日: ${q.nextReviewDate}</span>
+                            </div>
+
+                            <div class="bg-amber-50/60 border-l-2 border-amber-400 p-2.5 rounded-r-xl text-xs text-amber-900 font-medium">
+                                🔘 ${q.reasonType}
+                            </div>
+
+                            <div class="font-semibold text-slate-900 text-sm border-l-4 border-indigo-500 pl-3 py-0.5">
+                                ${q.title}
+                            </div>
+
+                            <div class="flex flex-wrap gap-1.5">
+                                ${q.tags.map(t => `<span class="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded">${t}</span>`).join('')}
+                            </div>
+
+                            <div class="space-y-1.5 text-xs bg-slate-50/80 p-3 rounded-xl">
+                                <div class="text-rose-600 font-medium">❌ ${q.errorCause}</div>
+                                <div class="text-amber-600 font-medium">⚠️ ${q.pitfall}</div>
+                            </div>
+
+                            <div class="bg-emerald-50/60 p-3 rounded-xl text-xs text-emerald-900 font-medium">
+                                ✅ ${q.analysis}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div></section>`;
+                container.innerHTML += html;
+            });
+
+            if (!hasAny) {
+                container.innerHTML = `<div class="bg-white p-12 rounded-2xl text-center text-slate-400 border border-slate-100">暂无 Jamie 的错题记录 🎉</div>`;
+            }
+        }
+
+        // 页面加载时自动获取最新数据渲染
+        loadDataAndRender();
+    </script>
