@@ -1,16 +1,54 @@
-<script>
-        // 异步从本地或云端生成的 JSON 文件自动读取最新数据
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jamie 的错题看板</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+        body { font-family: 'Noto+Sans+SC', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 p-4 md:p-8">
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- 顶部标题与统计 -->
+        <header class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <span class="px-3 py-1 bg-blue-50 text-blue-600 font-bold rounded-lg text-xs">👤 Jamie · 7年级</span>
+                <h1 class="text-2xl font-bold text-slate-900 mt-2">错题专属看板</h1>
+                <p class="text-xs text-slate-400 mt-1">
+                    状态: <span id="sync-status" class="text-amber-500 font-medium">正在连接 Notion 数据源...</span>
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <div class="bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200/60 text-center">
+                    <div class="text-xs text-slate-400 font-medium">Jamie 错题总数</div>
+                    <div class="text-xl font-bold text-slate-900" id="jamie-total">0</div>
+                </div>
+                <div class="bg-indigo-50/80 px-4 py-2.5 rounded-xl border border-indigo-200 text-center">
+                    <div class="text-xs text-indigo-600 font-medium">🎯 今日待复习</div>
+                    <div class="text-xl font-bold text-indigo-700" id="jamie-today">0</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 错题分类板块容器 -->
+        <main id="subject-container" class="space-y-8">
+            <div class="bg-white p-12 rounded-2xl text-center text-slate-400 border border-slate-100">正在从云端加载错题数据...</div>
+        </main>
+    </div>
+
+    <script>
         async function loadDataAndRender() {
             try {
-                // 读取自动生成的 json 数据
                 const response = await fetch('jamie-data.json');
                 if (!response.ok) throw new Error('数据文件未找到');
                 const jamieQuestions = await response.json();
-                
                 renderJamie(jamieQuestions);
             } catch (error) {
                 console.warn("未检测到自动同步文件，使用内置默认数据渲染", error);
-                // 降级使用兜底数据
                 renderJamie([
                     {
                         id: 1,
@@ -18,8 +56,8 @@
                         subject: "数学",
                         date: "2026-09-17",
                         nextReviewDate: "2026-09-17",
-                        reasonType: "选取理由：请先运行同步脚本生成数据",
-                        title: "等待同步...",
+                        reasonType: "选取理由：等待 GitHub Actions 自动同步",
+                        title: "正在等待云端同步...",
                         tags: ["#提示"],
                         errorCause: "暂无",
                         pitfall: "暂无",
@@ -31,14 +69,12 @@
 
         function renderJamie(jamieQuestions) {
             const todayStr = new Date().toISOString().split('T')[0];
-            
-            // 只筛选出属于 Jamie 的题目
-            const itemsToRender = jamieQuestions.filter(q => q.child === "Jamie");
+            const itemsToRender = jamieQuestions.filter(q => q.child === "Jamie" || !q.child);
 
             document.getElementById('jamie-total').textContent = itemsToRender.length;
             const todayCount = itemsToRender.filter(q => q.nextReviewDate <= todayStr).length;
             document.getElementById('jamie-today').textContent = todayCount;
-            document.getElementById('sync-status').textContent = "✨ 已连接 Notion 数据库";
+            document.getElementById('sync-status').textContent = "✨ 已连接 Notion 数据源";
             document.getElementById('sync-status').className = "text-emerald-600 font-medium";
 
             const container = document.getElementById('subject-container');
@@ -103,6 +139,7 @@
             }
         }
 
-        // 页面加载时自动获取最新数据渲染
         loadDataAndRender();
     </script>
+</body>
+</html>
