@@ -30,8 +30,10 @@ jobs:
           import json
           import os
 
-          token = os.environ["NOTION_TOKEN"]
-          db_id = os.environ["DATABASE_ID"]
+          token = os.environ.get("NOTION_TOKEN", "").strip()
+          db_id = os.environ.get("DATABASE_ID", "").strip()
+
+          print(f"DEBUG: Database ID length: {len(db_id)}, Token length: {len(token)}")
 
           url = f"https://api.notion.com/v1/databases/{db_id}/query"
           headers = {
@@ -40,7 +42,9 @@ jobs:
               "Content-Type": "application/json"
           }
 
-          req = urllib.request.Request(url, data=json.dumps({}).encode("utf-8"), headers=headers, method="POST")
+          # Notion 查询接口需要传入一个空的 JSON 对象 {}
+          req_data = json.dumps({}).encode("utf-8")
+          req = urllib.request.Request(url, data=req_data, headers=headers, method="POST")
           
           try:
               with urllib.request.urlopen(req) as response:
@@ -80,13 +84,17 @@ jobs:
                               "analysis": get_text("Analysis")
                           })
                       except Exception as e:
-                          print(f"解析出错: {e}")
+                          print(f"解析某行出错: {e}")
 
                   with open("jamie-data.json", "w", encoding="utf-8") as f:
                       json.dump(parsed_questions, f, ensure_ascii=False, indent=4)
-                  print("Notion 数据抓取成功！")
+                  print("🎉 Notion 数据抓取并生成 JSON 成功！")
+          except urllib.error.HTTPError as e:
+              print(f"HTTP 错误码: {e.code}")
+              print(f"错误详情: {e.read().decode(\"utf-8\")}")
+              exit(1)
           except Exception as e:
-              print(f"请求失败: {e}")
+              print(f"其他请求失败: {e}")
               exit(1)
           '
 
