@@ -5,19 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coco 的错题本</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fa; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
-        h1 { text-align: center; color: #2c3e50; }
-        .subject-group { margin-bottom: 30px; }
-        .subject-title { font-size: 20px; color: #28a745; border-bottom: 2px solid #28a745; padding-bottom: 5px; margin-bottom: 15px; }
-        .card { background: white; padding: 20px; margin-bottom: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid #28a745; }
-        .meta { color: #6c757d; font-size: 14px; margin-bottom: 10px; }
-        .nav-btn { text-align: center; margin: 40px 0; }
-        .nav-btn a { text-decoration: none; background: #28a745; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; }
+        /* 全局基础样式（粉紫柔和基调） */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #faf7f9;
+            color: #333333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #db2777; /* 优雅的莓红色大标题 */
+            margin-bottom: 30px;
+        }
+
+        .subject-group {
+            margin-bottom: 40px;
+        }
+
+        /* 科目分类标题：粉紫主题 */
+        .subject-title {
+            font-size: 20px;
+            color: #be185d; 
+            border-bottom: 2px solid #f472b6;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        /* 现代高颜值卡片容器 */
+        .card {
+            background: #ffffff;
+            padding: 0;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(219, 39, 119, 0.06);
+            overflow: hidden;
+            border: 1px solid #fce7f3;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(219, 39, 119, 0.1);
+        }
+
+        /* 1. 核心考点区（置于顶部作为绝对视觉锚点） */
+        .card-header-topic {
+            background: linear-gradient(135deg, #fff1f2 0%, #fce7f3 100%);
+            padding: 14px 20px;
+            border-bottom: 1px solid #fbcfe8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topic-badge {
+            background: #db2777; /* 少女粉红标签 */
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .topic-title {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #831843;
+        }
+
+        /* 2. 主体内容区 */
+        .card-body {
+            padding: 18px 20px;
+        }
+
+        .question-text {
+            font-size: 15px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        /* 错因与解析区块衬底 */
+        .analysis-box {
+            background: #fffbfd;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-left: 4px solid #db2777;
+        }
+
+        .error-reason {
+            font-size: 14px;
+            color: #e11d48; /* 警示红 */
+            line-height: 1.5;
+        }
+
+        .correct-solution {
+            font-size: 14px;
+            color: #059669; /* 护眼绿 */
+            line-height: 1.5;
+        }
+
+        /* 3. 底部轻量元数据 */
+        .card-footer {
+            padding: 10px 20px;
+            background: #fffdfd;
+            border-top: 1px solid #fdf2f8;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        /* 底部导航按钮 */
+        .nav-btn {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .nav-btn a {
+            text-decoration: none;
+            background: #db2777;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.2s;
+            box-shadow: 0 4px 12px rgba(219, 39, 119, 0.2);
+        }
+
+        .nav-btn a:hover {
+            background: #be185d;
+        }
     </style>
 </head>
 <body>
 
-    <h1>📚 Coco 的错题本</h1>
+    <h1>🌸 Coco 的错题本</h1>
     <div id="container">正在加载错题数据...</div>
 
     <div class="nav-btn">
@@ -51,7 +185,7 @@
                     groupedData[subject].push(item);
                 });
 
-                // 渲染分类 HTML
+                // 渲染分类 HTML（适配全新的核心考点置顶粉紫卡片结构）
                 let htmlOutput = '';
                 for (const [subject, items] of Object.entries(groupedData)) {
                     htmlOutput += `
@@ -59,13 +193,33 @@
                             <div class="subject-title">📖 ${subject} (${items.length} 题)</div>
                             ${items.map(item => `
                                 <div class="card">
-                                    <div class="meta">
-                                        复习日：${item.ReviewDate || '无'}
+                                    <!-- 核心考点：置于最上方作为绝对视觉锚点 -->
+                                    <div class="card-header-topic">
+                                        <span class="topic-badge">📌 核心考点</span>
+                                        <h3 class="topic-title">${item.Knowledge && item.Knowledge.trim() !== '' ? item.Knowledge : '综合应用与知识点'}</h3>
                                     </div>
-                                    <h3>${item.Title || '无标题'}</h3>
-                                    <p><strong>错误原因：</strong> ${item.Reason || '无'}</p>
-                                    <p><strong>知识点：</strong> ${item.Knowledge || '无'}</p>
-                                    <p><strong>分析/解析：</strong> ${item.Analysis || '无'}</p>
+
+                                    <!-- 主体内容区 -->
+                                    <div class="card-body">
+                                        <div class="question-text">
+                                            ${item.Title && item.Title.trim() !== '' ? item.Title : '无标题'}
+                                        </div>
+                                        
+                                        <div class="analysis-box">
+                                            <div class="error-reason">
+                                                ❌ <strong>错误原因：</strong> ${item.Reason || '无'}
+                                            </div>
+                                            <div class="correct-solution">
+                                                ✔️ <strong>正确解析：</strong> ${item.Analysis || '无'}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 底部轻量元数据 -->
+                                    <div class="card-footer">
+                                        <span>🕒 复习日：${item.ReviewDate || '无'}</span>
+                                        <span>🔥 错题本归档</span>
+                                    </div>
                                 </div>
                             `).join('')}
                         </div>
