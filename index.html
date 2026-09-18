@@ -51,7 +51,7 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
 
-        /* 1. 核心考点区（置于顶部作为绝对视觉锚点） */
+        /* 1. 核心考点区（置于顶部：绑定 Pitfall） */
         .card-header-topic {
             background: linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
             padding: 14px 20px;
@@ -115,15 +115,25 @@
             line-height: 1.5;
         }
 
-        /* 3. 底部轻量元数据 */
+        /* 3. 底部轻量元数据（左侧 Knowledge 类型，右侧 ReviewDate 日期） */
         .card-footer {
-            padding: 10px 20px;
+            padding: 12px 20px;
             background: #fcfcfc;
             border-top: 1px solid #f3f4f6;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .card-knowledge {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 2px 8px;
+            border-radius: 4px;
             font-size: 12px;
-            color: #9ca3af;
+            font-weight: 500;
         }
 
         /* 底部导航按钮 */
@@ -157,78 +167,112 @@
     </div>
 
     <script>
-        fetch('jamie-data.json?' + new Date().getTime())
-            .then(response => response.json())
-            .then(data => {
-                const container = document.getElementById('container');
-                
-                // 过滤出 Jamie 的数据
-                const jamieData = data.filter(item => {
-                    const childVal = item.Child || '';
-                    return childVal.trim().toLowerCase() === 'jamie';
-                });
-                
-                if (jamieData.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; color:#888;">暂无 Jamie 的错题记录</p>';
-                    return;
+        // 核心渲染逻辑函数
+        function renderData(data) {
+            const container = document.getElementById('container');
+            
+            // 过滤出 Jamie 的数据
+            const jamieData = data.filter(item => {
+                const childVal = item.Child || '';
+                return childVal.trim().toLowerCase() === 'jamie';
+            });
+            
+            if (jamieData.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#888;">暂无 Jamie 的错题记录</p>';
+                return;
+            }
+
+            // 按照 Subject（科目）分组
+            const groupedData = {};
+            jamieData.forEach(item => {
+                const subject = item.Subject && item.Subject.trim() !== '' ? item.Subject.trim() : '未分类科目';
+                if (!groupedData[subject]) {
+                    groupedData[subject] = [];
                 }
+                groupedData[subject].push(item);
+            });
 
-                // 按照 Subject（科目）分组
-                const groupedData = {};
-                jamieData.forEach(item => {
-                    const subject = item.Subject && item.Subject.trim() !== '' ? item.Subject.trim() : '未分类科目';
-                    if (!groupedData[subject]) {
-                        groupedData[subject] = [];
-                    }
-                    groupedData[subject].push(item);
-                });
+            // 渲染分类 HTML
+            let htmlOutput = '';
+            for (const [subject, items] of Object.entries(groupedData)) {
+                htmlOutput += `
+                    <div class="subject-group">
+                        <div class="subject-title">📖 ${subject} (${items.length} 题)</div>
+                        ${items.map(item => `
+                            <div class="card">
+                                <!-- 1. 顶部核心考点：绑定 Notion 里的 Pitfall -->
+                                <div class="card-header-topic">
+                                    <span class="topic-badge">📌 核心考点</span>
+                                    <h3 class="topic-title">${item.Pitfall && item.Pitfall.trim() !== '' ? item.Pitfall : '综合应用与知识点'}</h3>
+                                </div>
 
-                // 渲染分类 HTML（适配全新的卡片结构：核心考点置顶 + 错因/解析分层）
-                let htmlOutput = '';
-                for (const [subject, items] of Object.entries(groupedData)) {
-                    htmlOutput += `
-                        <div class="subject-group">
-                            <div class="subject-title">📖 ${subject} (${items.length} 题)</div>
-                            ${items.map(item => `
-                                <div class="card">
-                                    <!-- 核心考点：置于最上方作为绝对视觉锚点 -->
-                                    <div class="card-header-topic">
-                                        <span class="topic-badge">📌 核心考点</span>
-                                        <h3 class="topic-title">${item.Knowledge && item.Knowledge.trim() !== '' ? item.Knowledge : '综合应用与知识点'}</h3>
+                                <!-- 2. 主体内容区：题目、错误原因、正确解析 -->
+                                <div class="card-body">
+                                    <div class="question-text">
+                                        ${item.Title && item.Title.trim() !== '' ? item.Title : '无标题题目'}
                                     </div>
-
-                                    <!-- 主体内容区 -->
-                                    <div class="card-body">
-                                        <div class="question-text">
-                                            ${item.Title && item.Title.trim() !== '' ? item.Title : '无标题题目'}
+                                    
+                                    <div class="analysis-box">
+                                        <div class="error-reason">
+                                            ❌ <strong>错误原因：</strong> ${item.Reason || '无'}
                                         </div>
-                                        
-                                        <div class="analysis-box">
-                                            <div class="error-reason">
-                                                ❌ <strong>错误原因：</strong> ${item.Reason || '无'}
-                                            </div>
-                                            <div class="correct-solution">
-                                                ✔️ <strong>正确解析：</strong> ${item.Analysis || '无'}
-                                            </div>
+                                        <div class="correct-solution">
+                                            ✔️ <strong>正确解析：</strong> ${item.Analysis || '无'}
                                         </div>
-                                    </div>
-
-                                    <!-- 底部轻量元数据 -->
-                                    <div class="card-footer">
-                                        <span>🕒 复习日：${item.ReviewDate || '无'}</span>
-                                        <span>🔥 错题本归档</span>
                                     </div>
                                 </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
 
-                container.innerHTML = htmlOutput;
+                                <!-- 3. 底部：左侧绑定 Knowledge（类型），右侧绑定 ReviewDate（复习日） -->
+                                <div class="card-footer">
+                                    <span class="card-knowledge">🏷️ 类型: ${item.Knowledge && item.Knowledge.trim() !== '' ? item.Knowledge : '未分类'}</span>
+                                    <span>🕒 复习日：${item.ReviewDate || '无'}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            container.innerHTML = htmlOutput;
+        }
+
+        // 尝试从线上 fetch 数据（适用于 GitHub 线上环境）
+        fetch('jamie-data.json?' + new Date().getTime())
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                renderData(data);
             })
             .catch(err => {
-                document.getElementById('container').innerHTML = '<p style="color:red; text-align:center;">加载数据失败</p>';
-                console.error(err);
+                console.warn('本地直接打开无法 fetch 外部 json，已自动切换为内置测试数据预览：', err);
+                
+                // 本地双击打开时的降级测试数据（完美对应 Pitfall 和 Knowledge 字段）
+                const mockData = [
+                    {
+                        Child: "Jamie",
+                        Subject: "英语",
+                        Pitfall: "#英语翻译 #提建议句型 #宾语从句改疑问语序",
+                        Knowledge: "英语核心句型与语法",
+                        Title: "(豆包记录·翻译) ①这个周末为什么不和我们一起徒步呢？②你能教我怎么使用3D打印机吗？",
+                        Reason: "提建议句型和“疑问词+不定式”结构不会用，容易写成中式英语。",
+                        Analysis: "① Why not go hiking with us this weekend? ② Could you teach me how to use a 3D printer?",
+                        ReviewDate: "2026-09-17"
+                    },
+                    {
+                        Child: "Jamie",
+                        Subject: "数学",
+                        Pitfall: "#完全平方公式 #添括号法则 #公式变形",
+                        Knowledge: "代数式恒等变形",
+                        Title: "(4) 计算 88² 的简便方法",
+                        Reason: "拆项与计算均错，心算或凑数过程逻辑不清。",
+                        Analysis: "简便拆项：原式 = (90 - 2)² = 90² - 2×90×2 + 2² = 8100 - 360 + 4 = 7744",
+                        ReviewDate: "2026-09-17"
+                    }
+                ];
+                
+                renderData(mockData);
             });
     </script>
 </body>
