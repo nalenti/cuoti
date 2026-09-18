@@ -42,7 +42,7 @@ def get_notion_existing_pages(headers):
     return page_map
 
 def parse_multiple_questions(file_path):
-    """精准解析文件：Review Date 对应带空格的属性，ErrorCause 内容写入 Error"""
+    """精准解析文件：适配 Notion 日期类型与字段要求"""
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
@@ -54,7 +54,6 @@ def parse_multiple_questions(file_path):
     global_data = {
         "Child": extract_global("Child", content),
         "Subject": extract_global("Subject", content),
-        # 同时兼容 ReviewDate 和 Review Date 的文件写法
         "ReviewDate": extract_global("Review Date", content) or extract_global("ReviewDate", content),
     }
 
@@ -79,7 +78,7 @@ def parse_multiple_questions(file_path):
         q_error = get_field_content("❌ 错误解答与分析", ["✔️ 正确解析与推导"])
         q_analysis = get_field_content("✔️ 正确解析与推导", [])
 
-        # 标题及 Error 列的内容：包含 题目原题 + 错误解答与分析 (ErrorCause内容)
+        # 标题及 Error 列的内容：包含 题目原题 + 错误解答与分析
         error_column_content = f"【题目原题】\n{q_question}\n\n【错误解答与分析】\n{q_error}"
 
         questions.append({
@@ -91,7 +90,7 @@ def parse_multiple_questions(file_path):
                 "Knowledge": q_knowledge,
                 "Pitfall": q_pitfall,
                 "ErrorCause": q_error,          # 保留内部 ErrorCause 数据
-                "Error": q_error,               # 按照要求：ErrorCause 的内容写到 Error 里
+                "Error": q_error,               # ErrorCause 内容写到 Error 里
                 "Analysis": q_analysis          # 对应 Analysis 列（纯正解，不含原题）
             }
         })
@@ -142,9 +141,11 @@ def sync_to_notion():
                 properties["Child"] = {"rich_text": [{"text": {"content": data["Child"][:2000]}}]}
             if data["Subject"]:
                 properties["Subject"] = {"rich_text": [{"text": {"content": data["Subject"][:2000]}}]}
-            # 注意：此处严格对应 Notion 属性名为带有空格的 "Review Date"
+            
+            # 💡 核心修复：Review Date 必须传 Notion 的 Date 类型结构 {"date": {"start": "YYYY-MM-DD"}}
             if data["ReviewDate"]:
-                properties["Review Date"] = {"rich_text": [{"text": {"content": data["ReviewDate"][:2000]}}]}
+                properties["Review Date"] = {"date": {"start": data["ReviewDate"]}}
+
             if data["Knowledge"]:
                 properties["Knowledge"] = {"rich_text": [{"text": {"content": data["Knowledge"][:2000]}}]}
             if data["ErrorCause"]:
