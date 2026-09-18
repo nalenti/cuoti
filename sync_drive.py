@@ -4,7 +4,6 @@ import io
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
-from googleapiclient.errors import HttpError
 
 # 从环境变量中读取刚才存入的 JSON 密钥
 sa_key_info = json.loads(os.environ["GCP_SA_KEY"])
@@ -23,8 +22,8 @@ def main():
     )
     service = build('drive', 'v3', credentials=credentials)
 
-    # 3. 修正后的查询：不限制 root 或子目录，直接抓取网盘里所有带 .md 的文件
-    query = "name contains '.md' and trashed = false"
+    # 3. 获取根目录下（'root' in parents）的所有未删除文件和文件夹
+    query = "trashed = false and 'root' in parents"
 
     results = service.files().list(
         q=query, 
@@ -35,49 +34,64 @@ def main():
     files = results.get('files', [])
 
     if not files:
-        print("📭 谷歌网盘中未找到任何 .md 文件")
+        print("📭 谷歌网盘根目录下未找到任何文件")
         return
 
-    print(f"📄 共发现 {len(files)} 个云端 Markdown 文件，开始同步到仓库的 '{TARGET_DIR}' 目录下...")
+    print(f"📄 共发现 {len(files)} 个云端根目录项目，开始按规则筛选错题...")
 
-    # 4. 循环遍历每一个找到的 .md 文件并依次下载/导出
+    # 4. 循环遍历根目录下的项目
     for file in files:
         file_id = file['id']
         file_name = file['name']
+        mime_type = file['mimeType']
+        
+        # 🎯 双重过滤：
+        # ① 如果是文件夹（例如“河西走廊”），直接跳过，绝不拉取！
+        if mime_type == 'application/vnd.google-apps.folder':
+            print(f"⏭️ 跳过文件夹: {file_name}")
+            continue
+
+        # ② 如果文件名中不包含 ".md"，直接跳过
+        if '.md' not in file_name:
+            print(f"⏭️ 跳过无关文件: {file_name}")
+            continue
+
         print(f"----------------------------------------")
-        print(f"📥 正在处理文件: {file_name}")
+        print(f"📥 正在同步错题文件: {file_name}")
 
         fh = io.BytesIO()
 
-        # 智能容错：直接下载，如果遇到 Google Docs 在线文档限制则自动切换为 export 导出
+        # 5. 智能导出/下载
         try:
-            request = service.files().get_media(fileId=file_id)
+            if mime_type == 'application/vnd.google-apps.document':
+                # Google 在线文档导出为纯文本
+                request = service.files().export_media(fileId=file_id, mimeType='text/plain')
+            else:
+                # 普通文件直接下载
+                request = service.files().get_media(fileId=file_id)
+
             downloader = MediaIoBaseDownload(fh, request)
             done = False
             while not done:
                 status, done = downloader.next_chunk()
-        except HttpError as e:
-            if "fileNotDownloadable" in str(e) or "Only files with binary content can be downloaded" in str(e):
-                print(f"🔄 [{file_name}] 为在线文档格式，切换为导出模式...")
-                fh = io.BytesIO()
-                request = service.files().export_media(fileId=file_id, mimeType='text/plain')
-                downloader = MediaIoBaseDownload(fh, request)
-                done = False
-                while not done:
-                    status, done = downloader.next_chunk()
-            else:
-                raise e
+        except Exception as e:
+            print(f"❌ 处理文件 {file_name} 失败: {e}")
+            continue
 
-        # 5. 组合路径并保存到指定的子文件夹中
+        # 6. 保存到本地的 study/ 目录中
         file_path = os.path.join(TARGET_DIR, file_name)
-        file_content = fh.getvalue().decode('utf-8')
+        try:
+            file_content = fh.getvalue().decode('utf-8')
+        except UnicodeDecodeError:
+            file_content = fh.getvalue().decode('gbk', errors='ignore')
+
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(file_content)
             
         print(f"✅ [{file_name}] 成功同步并存入 {file_path}！")
 
     print(f"----------------------------------------")
-    print("🎉 所有文件同步完成！")
+    print("🎉 错题同步完成！")
 
 if __name__ == "__main__":
     main()
