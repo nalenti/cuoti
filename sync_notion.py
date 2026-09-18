@@ -7,7 +7,7 @@ DATABASE_ID = os.environ.get("DATABASE_ID")
 TARGET_DIR = "study"
 
 def get_notion_existing_titles(headers):
-    """查询 Notion 数据库中已存在的页面标题（这里用 '文件名 - 错题标题' 作为唯一标识，防止重复）"""
+    """查询 Notion 数据库中已存在的页面标题"""
     existing_titles = set()
     url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
     payload = {}
@@ -36,30 +36,30 @@ def get_notion_existing_titles(headers):
     return existing_titles
 
 def parse_multiple_questions(file_path):
-    """解析文件：提取顶部全局属性，并把正文按“错题 X”切分成多个独立的错题"""
+    """解析文件：精准提取顶部单行或多行属性，并按“错题 X”切分正文"""
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    def extract_field(pattern, text):
-        match = re.search(pattern, text)
+    # 精准字段提取：遇到下一个字段名或行尾时停止抓取
+    def extract_field(key, text):
+        pattern = rf"{key}:\s*(.+?)(?=\s+(?:Child|Subject|ReviewDate|Reason|Knowledge|ErrorCause|Pitfall|Analysis):|$)"
+        match = re.search(pattern, text, re.IGNORECASE)
         return match.group(1).strip() if match else ""
 
     # 1. 提取顶部全局属性
     base_data = {
-        "Child": extract_field(r"Child:\s*(.*)", content),
-        "Subject": extract_field(r"Subject:\s*(.*)", content),
-        "ReviewDate": extract_field(r"ReviewDate:\s*(.*)", content),
-        "Reason": extract_field(r"Reason:\s*(.*)", content),
-        "Knowledge": extract_field(r"Knowledge:\s*(.*)", content),
-        "ErrorCause": extract_field(r"ErrorCause:\s*(.*)", content),
-        "Pitfall": extract_field(r"Pitfall:\s*(.*)", content),
-        "Analysis": extract_field(r"Analysis:\s*(.*)", content),
+        "Child": extract_field("Child", content),
+        "Subject": extract_field("Subject", content),
+        "ReviewDate": extract_field("ReviewDate", content),
+        "Reason": extract_field("Reason", content),
+        "Knowledge": extract_field("Knowledge", content),
+        "ErrorCause": extract_field("ErrorCause", content),
+        "Pitfall": extract_field("Pitfall", content),
+        "Analysis": extract_field("Analysis", content),
     }
 
     # 2. 按“错题 X：”把正文切分为多个独立错题
     raw_filename = os.path.splitext(os.path.basename(file_path))[0]
-    
-    # 按照 “错题 \d+” 进行分割
     parts = re.split(r'(?=错题\s*\d+[:：])', content)
     questions = []
 
@@ -68,7 +68,6 @@ def parse_multiple_questions(file_path):
         if not part or not re.match(r'^错题\s*\d+[:：]', part):
             continue
         
-        # 提取当前错题的标题
         first_line = part.split('\n')[0].strip()
         unique_title = f"{raw_filename} | {first_line}"
 
@@ -119,6 +118,11 @@ def sync_to_notion():
             data = q["data"]
             print(f"✨ 正在写入 Notion: {title}...")
 
+            # 验证并清理日期格式（只保留前10位 YYYY-MM-DD，防止多余字符）
+            review_date = data["ReviewDate"][:10] if data["ReviewDate"] else None
+            if review_date and not re.match(r'^\d{4}-\d{2}-\d{2}$', review_date):
+                review_date = None
+
             payload = {
                 "parent": {"database_id": DATABASE_ID},
                 "properties": {
@@ -132,7 +136,7 @@ def sync_to_notion():
                         "select": {"name": data["Subject"]} if data["Subject"] else None
                     },
                     "ReviewDate": {
-                        "date": {"start": data["ReviewDate"]} if data["ReviewDate"] else None
+                        "date": {"start": review_date} if review_date else None
                     },
                     "Reason": {
                         "rich_text": [{"text": {"content": data["Reason"][:2000]}}] if data["Reason"] else []
@@ -152,7 +156,7 @@ def sync_to_notion():
                 }
             }
 
-            # 清理值为 None 的字段
+            # 清理值为 None 的属性字段
             payload["properties"] = {k: v for k, v in payload["properties"].items() if v is not None and v.get("select") != {"name": None}}
 
             response = requests.post("https://api.notion.com/v1/pages", headers=headers, json=payload)
