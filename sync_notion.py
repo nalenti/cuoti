@@ -6,9 +6,9 @@ NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
 DATABASE_ID = os.environ.get("DATABASE_ID")
 TARGET_DIR = "study"
 
-def get_notion_existing_titles(headers):
-    """查询 Notion 数据库中已存在的页面标题（防止重复同步）"""
-    existing_titles = set()
+def get_notion_existing_pages(headers):
+    """获取 Notion 数据库中已存在的页面标题及对应的 Page ID"""
+    page_map = {}
     url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
     payload = {}
 
@@ -22,8 +22,8 @@ def get_notion_existing_titles(headers):
         results = data.get("results", [])
         
         for page in results:
+            page_id = page.get("id")
             properties = page.get("properties", {})
-            # 智能匹配标题列
             title_val = ""
             for key, val in properties.items():
                 if val.get("type") == "title":
@@ -32,27 +32,25 @@ def get_notion_existing_titles(headers):
                         title_val = "".join([x.get("plain_text", "") for x in t_list])
                     break
             if title_val:
-                existing_titles.add(title_val)
+                page_map[title_val] = page_id
                 
         if data.get("has_more"):
             payload["start_cursor"] = data.get("next_cursor")
         else:
             break
             
-    return existing_titles
+    return page_map
 
 def parse_multiple_questions(file_path):
-    """解析文件：精准提取顶部单行或多行属性，并按“错题 X”切分正文"""
+    """解析文件：精准提取顶部属性，并按“错题 X”切分正文"""
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # 精准字段提取：遇到下一个字段名或行尾时停止抓取
     def extract_field(key, text):
         pattern = rf"{key}:\s*(.+?)(?=\s+(?:Child|Subject|ReviewDate|Reason|Knowledge|ErrorCause|Pitfall|Analysis):|$)"
         match = re.search(pattern, text, re.IGNORECASE)
         return match.group(1).strip() if match else ""
 
-    # 1. 提取顶部全局属性（完全对齐你的 Notion 字段名）
     base_data = {
         "Child": extract_field("Child", content),
         "Subject": extract_field("Subject", content),
@@ -64,7 +62,6 @@ def parse_multiple_questions(file_path):
         "Analysis": extract_field("Analysis", content),
     }
 
-    # 2. 按“错题 X：”把正文切分为多个独立错题
     raw_filename = os.path.splitext(os.path.basename(file_path))[0]
     parts = re.split(r'(?=错题\s*\d+[:：])', content)
     questions = []
@@ -97,8 +94,8 @@ def sync_to_notion():
     }
 
     print("🔍 正在获取 Notion 数据库中已有的记录清单...")
-    existing_titles = get_notion_existing_titles(headers)
-    print(f"📊 Notion 中当前已存在 {len(existing_titles)} 条记录。")
+    page_map = get_notion_existing_pages(headers)
+    print(f"📊 Notion 中当前已存在 {len(page_map)} 条记录。")
 
     if not os.path.exists(TARGET_DIR):
         print(f"❌ 目录 {TARGET_DIR} 不存在。")
@@ -117,19 +114,9 @@ def sync_to_notion():
 
         for q in question_list:
             title = q["title"]
-            if title in existing_titles:
-                print(f"⏩ 跳过已存在: {title}")
-                continue
-
             data = q["data"]
-            print(f"✨ 正在写入 Notion: {title}...")
 
-            # 验证并清理日期格式（YYYY-MM-DD）
-            review_date = data["ReviewDate"][:10] if data["ReviewDate"] else None
-            if review_date and not re.match(r'^\d{4}-\d{2}-\d{2}$', review_date):
-                review_date = None
-
-            # 严格按照你 Notion 数据库的属性类型（Select / Date / Rich_Text）构造 Payload
+            # 构造统一的属性格式 (rich_text)
             properties = {
                 "标题": {
                     "title": [{"text": {"content": title[:200]}}]
@@ -137,11 +124,11 @@ def sync_to_notion():
             }
 
             if data["Child"]:
-                properties["Child"] = {"select": {"name": data["Child"]}}
+                properties["Child"] = {"rich_text": [{"text": {"content": data["Child"][:2000]}}]}
             if data["Subject"]:
-                properties["Subject"] = {"select": {"name": data["Subject"]}}
-            if review_date:
-                properties["ReviewDate"] = {"date": {"start": review_date}}
+                properties["Subject"] = {"rich_text": [{"text": {"content": data["Subject"][:2000]}}]}
+            if data["ReviewDate"]:
+                properties["ReviewDate"] = {"rich_text": [{"text": {"content": data["ReviewDate"][:2000]}}]}
             if data["Reason"]:
                 properties["Reason"] = {"rich_text": [{"text": {"content": data["Reason"][:2000]}}]}
             if data["Knowledge"]:
@@ -153,20 +140,36 @@ def sync_to_notion():
             if data["Analysis"]:
                 properties["Analysis"] = {"rich_text": [{"text": {"content": data["Analysis"][:2000]}}]}
 
-            payload = {
-                "parent": {"database_id": DATABASE_ID},
-                "properties": properties
-            }
+            # 💡 智能判断：如果页面已存在（甚至是空白的），直接更新它；如果不存在，则创建新页面
+            if title in page_map:
+                page_id = page_map[title]
+                print(f"🔄 正在更新已有页面: {title}...")
+                response = requests.patch(
+                    f"https://api.notion.com/v1/pages/{page_id}",
+                    headers=headers,
+                    json={"properties": properties}
+                )
+                action_type = "更新"
+            else:
+                print(f"✨ 正在创建新页面: {title}...")
+                payload = {
+                    "parent": {"database_id": DATABASE_ID},
+                    "properties": properties
+                }
+                response = requests.post(
+                    "https://api.notion.com/v1/pages",
+                    headers=headers,
+                    json=payload
+                )
+                action_type = "新增"
 
-            response = requests.post("https://api.notion.com/v1/pages", headers=headers, json=payload)
-            
             if response.status_code == 200:
-                print(f"✅ 成功写入: {title}")
+                print(f"✅ 成功{action_type}: {title}")
                 success_count += 1
             else:
-                print(f"❌ 写入失败 ({title}): {response.text}")
+                print(f"❌ {action_type}失败 ({title}): {response.text}")
 
-    print(f"\n🎉 Notion 多题目拆分增量同步完成！本次共成功新增 {success_count} 条错题。")
+    print(f"\n🎉 Notion 智能同步完成！本次共成功处理 {success_count} 条错题。")
 
 if __name__ == "__main__":
-    sync_notion_data_func = sync_to_notion()
+    sync_to_notion()
