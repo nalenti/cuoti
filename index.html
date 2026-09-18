@@ -7,7 +7,6 @@
     <!-- 引入 MathJax 完美渲染数学公式 -->
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        /* 全局基础样式 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: #f8f9fa;
@@ -36,7 +35,6 @@
             font-weight: 700;
         }
 
-        /* 现代高颜值卡片容器 */
         .card {
             background: #ffffff;
             padding: 0;
@@ -53,7 +51,6 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
 
-        /* 1. 核心考点区（置于顶部：绑定 Pitfall） */
         .card-header-topic {
             background: linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
             padding: 14px 20px;
@@ -64,7 +61,7 @@
         }
 
         .topic-badge {
-            background: #4f46e5; /* 科技感主题色 */
+            background: #4f46e5;
             color: #ffffff;
             font-size: 12px;
             font-weight: 600;
@@ -81,7 +78,6 @@
             color: #1f2937;
         }
 
-        /* 2. 主体内容区 */
         .card-body {
             padding: 18px 20px;
         }
@@ -94,7 +90,6 @@
             font-weight: 500;
         }
 
-        /* 错因与解析区块衬底 */
         .analysis-box {
             background: #f9fafb;
             border-radius: 8px;
@@ -107,17 +102,16 @@
 
         .error-reason {
             font-size: 14px;
-            color: #dc2626; /* 警示红 */
+            color: #dc2626;
             line-height: 1.5;
         }
 
         .correct-solution {
             font-size: 14px;
-            color: #059669; /* 护眼绿 */
+            color: #059669;
             line-height: 1.5;
         }
 
-        /* 3. 底部轻量元数据 */
         .card-footer {
             padding: 12px 20px;
             background: #fcfcfc;
@@ -138,7 +132,6 @@
             font-weight: 500;
         }
 
-        /* 底部导航按钮 */
         .nav-btn {
             text-align: center;
             margin: 40px 0;
@@ -169,7 +162,7 @@
     </div>
 
     <script>
-        // 核心记忆曲线筛选算法（优先 7 天前，无则取 > 7 天的最后一天）
+        // 核心记忆曲线筛选算法
         function getMemoryCurveQuestions(allQuestions) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -268,13 +261,12 @@
 
             container.innerHTML = htmlOutput;
 
-            // 触发 MathJax 重新渲染数学公式
             if (window.MathJax) {
                 MathJax.typesetPromise().catch((err) => console.log('MathJax 渲染错误:', err));
             }
         }
 
-        // 尝试从线上 fetch 数据
+        // 从线上获取数据
         fetch('jamie-data.json?' + new Date().getTime())
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok');
@@ -284,32 +276,8 @@
                 renderData(data);
             })
             .catch(err => {
-                console.warn('本地直接打开无法 fetch 外部 json，已自动切换为内置测试数据预览：', err);
-                
-                const mockData = [
-                    {
-                        Child: "Jamie",
-                        Subject: "英语",
-                        Pitfall: "#英语翻译 #提建议句型",
-                        Knowledge: "英语核心句型与语法",
-                        Title: "(豆包记录·翻译) ①这个周末为什么不和我们一起徒步呢？",
-                        Reason: "提建议句型不会用。",
-                        Analysis: "① Why not go hiking with us this weekend?",
-                        ReviewDate: "2026-09-11"
-                    },
-                    {
-                        Child: "Jamie",
-                        Subject: "数学",
-                        Pitfall: "#完全平方公式",
-                        Knowledge: "代数式恒等变形",
-                        Title: "(4) 计算 $88^2$ 的简便方法",
-                        Reason: "拆项与计算均错。",
-                        Analysis: "简便拆项：原式 = $(90 - 2)^2 = 7744$",
-                        ReviewDate: "2026-09-10"
-                    }
-                ];
-                
-                renderData(mockData);
+                console.warn('获取数据失败:', err);
+                container.innerHTML = '<p style="text-align:center; color:#e74c3c;">加载错题数据失败，请检查网络或 JSON 文件路径</p>';
             });
     </script>
 </body>
