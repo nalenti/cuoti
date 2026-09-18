@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jamie 的错题本</title>
-    <!-- 引入 MathJax 完美渲染数学公式 -->
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
@@ -15,17 +14,14 @@
             margin: 0 auto;
             padding: 30px 20px;
         }
-
         h1 {
             text-align: center;
             color: #2c3e50;
             margin-bottom: 30px;
         }
-
         .subject-group {
             margin-bottom: 40px;
         }
-
         .subject-title {
             font-size: 20px;
             color: #007bff;
@@ -34,7 +30,6 @@
             margin-bottom: 20px;
             font-weight: 700;
         }
-
         .card {
             background: #ffffff;
             padding: 0;
@@ -43,14 +38,7 @@
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
             overflow: hidden;
             border: 1px solid #eaeaea;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-        }
-
         .card-header-topic {
             background: linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
             padding: 14px 20px;
@@ -59,7 +47,6 @@
             align-items: center;
             gap: 10px;
         }
-
         .topic-badge {
             background: #4f46e5;
             color: #ffffff;
@@ -67,29 +54,22 @@
             font-weight: 600;
             padding: 4px 8px;
             border-radius: 6px;
-            letter-spacing: 0.5px;
-            flex-shrink: 0;
         }
-
         .topic-title {
             margin: 0;
             font-size: 16px;
             font-weight: 700;
             color: #1f2937;
         }
-
         .card-body {
             padding: 18px 20px;
         }
-
         .question-text {
             font-size: 15px;
             color: #374151;
             line-height: 1.6;
             margin-bottom: 16px;
-            font-weight: 500;
         }
-
         .analysis-box {
             background: #f9fafb;
             border-radius: 8px;
@@ -99,19 +79,14 @@
             gap: 10px;
             border-left: 4px solid #4f46e5;
         }
-
         .error-reason {
             font-size: 14px;
             color: #dc2626;
-            line-height: 1.5;
         }
-
         .correct-solution {
             font-size: 14px;
             color: #059669;
-            line-height: 1.5;
         }
-
         .card-footer {
             padding: 12px 20px;
             background: #fcfcfc;
@@ -122,21 +97,16 @@
             font-size: 13px;
             color: #6b7280;
         }
-
         .card-knowledge {
             background: #e0e7ff;
             color: #3730a3;
             padding: 2px 8px;
             border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
         }
-
         .nav-btn {
             text-align: center;
             margin: 40px 0;
         }
-
         .nav-btn a {
             text-decoration: none;
             background: #007bff;
@@ -144,11 +114,6 @@
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .nav-btn a:hover {
-            background: #0056b3;
         }
     </style>
 </head>
@@ -162,16 +127,20 @@
     </div>
 
     <script>
-        // 核心记忆曲线筛选算法
+        // 核心记忆曲线筛选算法（安全版本）
         function getMemoryCurveQuestions(allQuestions) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
             const processed = allQuestions.map(q => {
-                const dateStr = (q.ReviewDate || '').replace(/年|月/g, '-').replace(/日/g, '');
+                let dateStr = q.ReviewDate || '';
+                // 纯字符串安全替换，不使用复杂正则
+                dateStr = dateStr.split('年').join('-').split('月').join('-').split('日').join('');
+                
                 const targetDate = new Date(dateStr);
                 targetDate.setHours(0, 0, 0, 0);
-                const diffDays = Math.round((today - targetDate) / (1000 * 60 * 60 * 24));
+                
+                const diffDays = isNaN(targetDate.getTime()) ? 0 : Math.round((today - targetDate) / (1000 * 60 * 60 * 24));
                 return { ...q, diffDays };
             });
 
@@ -186,13 +155,13 @@
                     const minDiff = Math.min(...olderThanSeven.map(q => q.diffDays));
                     selected = olderThanSeven.filter(q => q.diffDays === minDiff);
                 } else {
+                    // 如果没有 7 天前或更早的（比如全都是最近 17、18 号的题），直接展示全部，保证不空屏
                     selected = processed;
                 }
             }
             return selected;
         }
 
-        // 核心渲染逻辑函数
         function renderData(data) {
             const container = document.getElementById('container');
             
@@ -231,26 +200,17 @@
                             <div class="card">
                                 <div class="card-header-topic">
                                     <span class="topic-badge">📌 核心考点</span>
-                                    <h3 class="topic-title">${item.Pitfall && item.Pitfall.trim() !== '' ? item.Pitfall : '综合应用与知识点'}</h3>
+                                    <h3 class="topic-title">${item.Pitfall || '综合应用与知识点'}</h3>
                                 </div>
-
                                 <div class="card-body">
-                                    <div class="question-text">
-                                        ${item.Title && item.Title.trim() !== '' ? item.Title : '无标题题目'}
-                                    </div>
-                                    
+                                    <div class="question-text">${item.Title || '无标题题目'}</div>
                                     <div class="analysis-box">
-                                        <div class="error-reason">
-                                            ❌ <strong>错误原因：</strong> ${item.Reason || '无'}
-                                        </div>
-                                        <div class="correct-solution">
-                                            ✔️ <strong>正确解析：</strong> ${item.Analysis || '无'}
-                                        </div>
+                                        <div class="error-reason">❌ <strong>错误原因：</strong> ${item.Reason || '无'}</div>
+                                        <div class="correct-solution">✔️ <strong>正确解析：</strong> ${item.Analysis || '无'}</div>
                                     </div>
                                 </div>
-
                                 <div class="card-footer">
-                                    <span class="card-knowledge">🏷️ 类型: ${item.Knowledge && item.Knowledge.trim() !== '' ? item.Knowledge : '未分类'}</span>
+                                    <span class="card-knowledge">🏷️ 类型: ${item.Knowledge || '未分类'}</span>
                                     <span>🕒 复习日：${item.ReviewDate \vert{}\vert{} '无'} (距今 ${item.diffDays} 天)</span>
                                 </div>
                             </div>
@@ -266,7 +226,6 @@
             }
         }
 
-        // 从线上获取数据
         fetch('jamie-data.json?' + new Date().getTime())
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok');
