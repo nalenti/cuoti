@@ -9,7 +9,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     
-    # 🎯 核心补充：赋予 Actions 写入仓库代码的权限，防止 git push 报错
+    # 🎯 关键：必须加上这行，赋予读写权限，否则第 5 步 git push 会因为 403 报错而失败
     permissions:
       contents: write
 
