@@ -42,27 +42,25 @@ def get_notion_existing_pages(headers):
     return page_map
 
 def parse_multiple_questions(file_path):
-    """解析文件：精准提取顶部属性，并按“错题 X”切分正文"""
+    """解析文件：精准切分每个错题区块，并独立提取各自的属性和内容"""
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    def extract_field(key, text):
+    raw_filename = os.path.splitext(os.path.basename(file_path))[0]
+    
+    # 先把文件顶部的全局属性（如 Child, Subject, ReviewDate）提取出来作为兜底
+    def extract_global_field(key, text):
         pattern = rf"{key}:\s*(.+?)(?=\s+(?:Child|Subject|ReviewDate|Reason|Knowledge|ErrorCause|Pitfall|Analysis):|$)"
         match = re.search(pattern, text, re.IGNORECASE)
         return match.group(1).strip() if match else ""
 
-    base_data = {
-        "Child": extract_field("Child", content),
-        "Subject": extract_field("Subject", content),
-        "ReviewDate": extract_field("ReviewDate", content),
-        "Reason": extract_field("Reason", content),
-        "Knowledge": extract_field("Knowledge", content),
-        "ErrorCause": extract_field("ErrorCause", content),
-        "Pitfall": extract_field("Pitfall", content),
-        "Analysis": extract_field("Analysis", content),
+    global_data = {
+        "Child": extract_global_field("Child", content),
+        "Subject": extract_global_field("Subject", content),
+        "ReviewDate": extract_global_field("ReviewDate", content),
     }
 
-    raw_filename = os.path.splitext(os.path.basename(file_path))[0]
+    # 按“错题 X”把正文切分为多个独立区块
     parts = re.split(r'(?=错题\s*\d+[:：])', content)
     questions = []
 
@@ -74,10 +72,27 @@ def parse_multiple_questions(file_path):
         first_line = part.split('\n')[0].strip()
         unique_title = f"{raw_filename} | {first_line}"
 
+        # 针对当前独立的错题小区块，提取它内部专属的各个字段
+        def extract_local_field(key, block_text):
+            # 允许匹配当前字段，直到遇到下一个字段名或文本结尾
+            pattern = rf"{key}[：:]\s*(.+?)(?=\s+(?:Reason|Knowledge|ErrorCause|Pitfall|Analysis|Child|Subject|ReviewDate)[：:]|$)"
+            match = re.search(pattern, block_text, re.DOTALL | re.IGNORECASE)
+            return match.group(1).strip() if match else ""
+
+        q_data = {
+            "Child": extract_local_field("Child", part) or global_data["Child"],
+            "Subject": extract_local_field("Subject", part) or global_data["Subject"],
+            "ReviewDate": extract_local_field("ReviewDate", part) or global_data["ReviewDate"],
+            "Reason": extract_local_field("Reason", part),
+            "Knowledge": extract_local_field("Knowledge", part),
+            "ErrorCause": extract_local_field("ErrorCause", part),
+            "Pitfall": extract_local_field("Pitfall", part),
+            "Analysis": extract_local_field("Analysis", part),
+        }
+
         questions.append({
             "title": unique_title,
-            "data": base_data,
-            "content": part
+            "data": q_data
         })
 
     return questions
@@ -116,7 +131,6 @@ def sync_to_notion():
             title = q["title"]
             data = q["data"]
 
-            # 构造统一的属性格式 (rich_text)
             properties = {
                 "标题": {
                     "title": [{"text": {"content": title[:200]}}]
@@ -140,10 +154,9 @@ def sync_to_notion():
             if data["Analysis"]:
                 properties["Analysis"] = {"rich_text": [{"text": {"content": data["Analysis"][:2000]}}]}
 
-            # 💡 智能判断：如果页面已存在（甚至是空白的），直接更新它；如果不存在，则创建新页面
             if title in page_map:
                 page_id = page_map[title]
-                print(f"🔄 正在更新已有页面: {title}...")
+                print(f"🔄 正在智能更新已有页面: {title}...")
                 response = requests.patch(
                     f"https://api.notion.com/v1/pages/{page_id}",
                     headers=headers,
