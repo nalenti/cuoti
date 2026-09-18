@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>错题本复习</title>
+    <title>错题本复习（大于6天调试版）</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -42,9 +42,9 @@
         .error-item:last-child {
             border-bottom: none;
         }
-        .tag {
-            background: #eef2ff;
-            color: #4f46e5;
+        .tag-debug {
+            background: #fef3c7;
+            color: #d97706;
             padding: 4px 10px;
             border-radius: 6px;
             font-size: 12px;
@@ -64,11 +64,10 @@
 </head>
 <body>
 
-    <h2>📖 错题本复习（7天以上历史错题）</h2>
+    <h2>📖 错题本复习（筛选大于6天的错题）</h2>
     <div id="error-container">加载中...</div>
 
     <script>
-        // 页面加载完成后自动获取并渲染数据
         document.addEventListener('DOMContentLoaded', () => {
             fetch('jamie-data.json')
                 .then(response => {
@@ -94,7 +93,7 @@
 
             const now = new Date();
 
-            // 1. 计算每道题距离今天过去几天（已适配大写字段 ReviewDate）[cite: 7, 8]
+            // 1. 计算天数
             const processedData = data.map(item => {
                 let diffDays = 0;
                 if (item.ReviewDate) {
@@ -106,16 +105,24 @@
                 return { ...item, diffDays };
             });
 
-            // 2. 核心筛选：只保留大于 6 天的错题[cite: 8]
+            // 2. 严格筛选大于 6 天的题目
             const targetList = processedData.filter(item => item.diffDays > 6);
 
             // 如果没有符合条件的题目
             if (targetList.length === 0) {
-                container.innerHTML = '<div class="empty-tip">🎉 太棒了，暂无超过 7 天需要复习的历史错题！</div>';
+                // 为了方便排查，把所有题目其实算出来是多少天，在控制台打印一下
+                console.log("所有题目的计算天数情况：", processedData);
+                container.innerHTML = `
+                    <div class="empty-tip">
+                        🎉 没有找到距离今天超过 6 天的错题。<br><br>
+                        <span style="font-size: 13px; color: #9ca3af;">
+                          （提示：F12 打开浏览器控制台 Console，可以看到所有题目解析出的具体天数，看看是不是日期格式没对上。）
+                        </span>
+                    </div>`;
                 return;
             }
 
-            // 3. 按科目（Subject）进行分组（已适配大写字段 Subject）[cite: 7, 8]
+            // 3. 按科目分组
             const groups = {};
             targetList.forEach(item => {
                 const subject = item.Subject || '未分类';
@@ -125,7 +132,7 @@
                 groups[subject].push(item);
             });
 
-            // 4. 渲染到网页上
+            // 4. 渲染
             for (const [subject, items] of Object.entries(groups)) {
                 const subjectDiv = document.createElement('div');
                 subjectDiv.className = 'subject-group';
@@ -135,12 +142,11 @@
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'error-item';
                     
-                    // 适配你的题目内容字段 Title[cite: 7, 8]
                     const titleText = item.Title || item.content || '无题目内容';
 
                     itemDiv.innerHTML = `
                         <span>${titleText}</span>
-                        <span class="tag">错于 ${item.diffDays} 天前</span>
+                        <span class="tag-debug">距今 ${item.diffDays} 天 (>6)</span>
                     `;
                     subjectDiv.appendChild(itemDiv);
                 });
