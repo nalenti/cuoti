@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jamie 的错题本</title>
+    <style>
+        /* 全局基础样式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .subject-group {
+            margin-bottom: 40px;
+        }
+
+        .subject-title {
+            font-size: 20px;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        /* 现代高颜值卡片容器 */
+        .card {
+            background: #ffffff;
+            padding: 0;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid #eaeaea;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 1. 核心考点区（置于顶部：绑定 Pitfall） */
+        .card-header-topic {
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
+            padding: 14px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topic-badge {
+            background: #4f46e5; /* 科技感主题色 */
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .topic-title {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        /* 2. 主体内容区 */
+        .card-body {
+            padding: 18px 20px;
+        }
+
+        .question-text {
+            font-size: 15px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        /* 错因与解析区块衬底 */
+        .analysis-box {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-left: 4px solid #4f46e5;
+        }
+
+        .error-reason {
+            font-size: 14px;
+            color: #dc2626; /* 警示红 */
+            line-height: 1.5;
+        }
+
+        .correct-solution {
+            font-size: 14px;
+            color: #059669; /* 护眼绿 */
+            line-height: 1.5;
+        }
+
+        /* 3. 底部轻量元数据（左侧 Knowledge 类型，右侧 ReviewDate 日期） */
+        .card-footer {
+            padding: 12px 20px;
+            background: #fcfcfc;
+            border-top: 1px solid #f3f4f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .card-knowledge {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* 底部导航按钮 */
+        .nav-btn {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .nav-btn a {
+            text-decoration: none;
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .nav-btn a:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="page-title">📚 Jamie 的错题本</h1>
+    <div id="container">正在加载错题数据...</div>
+
+    <div class="nav-btn">
+        <a href="coco.html">👉 切换到 Coco 的错题本</a>
+    </div>
+
+    <script>
+        // 核心渲染逻辑函数
+        function renderData(data) {
+            const container = document.getElementById('container');
+            container.innerHTML = '';
+            
+            // 过滤出 Jamie 的数据
+            const jamieData = data.filter(item => {
+                const childVal = item.Child || '';
+                return childVal.trim().toLowerCase() === 'jamie';
+            });
+            
+            if (jamieData.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#888;">暂无 Jamie 的错题记录</p>';
+                return;
+            }
+
+            const now = new Date();
+
+            // 1. 计算每一道题距离今天的天数 (兼容 ReviewDate 或带空格的 'Review Date')
+            const processedData = jamieData.map(item => {
+                let diffDays = 0;
+                const dateStr = item.ReviewDate || item['Review Date'];
+                if (dateStr) {
+                    const itemDate = new Date(dateStr);
+                    if (!isNaN(itemDate)) {
+                        diffDays = Math.floor((now - itemDate) / (1000 * 60 * 60 * 24));
+                    }
+                }
+                return { ...item, diffDays };
+            });
+
+            // 2. 筛选出所有大于 6 天的错题
+            const greaterThanSix = processedData.filter(item => item.diffDays > 6);
+
+            // 如果没有大于 6 天的题目
+            if (greaterThanSix.length === 0) {
+                container.innerHTML = '<div class="card" style="padding: 40px; text-align: center; color: #6b7280;">🎉 太棒了，暂无超过 6 天的历史错题需要复习！</div>';
+                return;
+            }
+
+            // 3. 找出所有满足条件的天数（去重并排序）
+            const allDays = [...new Set(greaterThanSix.map(item => item.diffDays))].sort((a, b) => a - b);
+            
+            // 获取其中最小的那一天（即距离今天最近的一天，比如第 7 天、第 8 天等）
+            const targetDay = allDays[0];
+
+            // 动态修改主标题，提示当前复习的是多少天前的题目
+            const titleElement = document.getElementById('page-title');
+            if (titleElement) {
+                titleElement.innerHTML = `📚 Jamie 的错题本 <span style="font-size: 15px; color: #6b7280; display: block; margin-top: 6px; font-weight: normal;">（当前集中复习：错于 ${targetDay} 天前的错题）</span>`;
+            }
+
+            // 4. 只保留这一天的错题
+            const targetList = greaterThanSix.filter(item => item.diffDays === targetDay);
+
+            // 5. 按照 Subject（科目）分组
+            const groupedData = {};
+            targetList.forEach(item => {
+                const subject = item.Subject && item.Subject.trim() !== '' ? item.Subject.trim() : '未分类科目';
+                if (!groupedData[subject]) {
+                    groupedData[subject] = [];
+                }
+                groupedData[subject].push(item);
+            });
+
+            // 6. 渲染分类 HTML（保持你原本精致的卡片样式不变）
+            let htmlOutput = '';
+            for (const [subject, items] of Object.entries(groupedData)) {
+                htmlOutput += `
+                    <div class="subject-group">
+                        <div class="subject-title">📖 ${subject} (${items.length} 题)</div>
+                        ${items.map(item => `
+                            <div class="card">
+                                <!-- 1. 顶部核心考点：绑定 Notion 里的 Pitfall -->
+                                <div class="card-header-topic">
+                                    <span class="topic-badge">📌 核心考点</span>
+                                    <h3 class="topic-title">${item.Pitfall && item.Pitfall.trim() !== '' ? item.Pitfall : '综合应用与知识点'}</h3>
+                                </div>
+
+                                <!-- 2. 主体内容区：题目、错误原因、正确解析 -->
+                                <div class="card-body">
+                                    <div class="question-text">
+                                        ${item.Title && item.Title.trim() !== '' ? item.Title : '无标题题目'}
+                                    </div>
+                                    
+                                    <div class="analysis-box">
+                                        <div class="error-reason">
+                                            ❌ <strong>错误原因：</strong> ${item.Reason || item.Error || item.ErrorCause || '无'}
+                                        </div>
+                                        <div class="correct-solution">
+                                            ✔️ <strong>正确解析：</strong> ${item.Analysis || '无'}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 3. 底部：左侧绑定 Knowledge（类型），右侧绑定 ReviewDate（复习日） -->
+                                <div class="card-footer">
+                                    <span class="card-knowledge">🏷️ 类型: ${item.Knowledge && item.Knowledge.trim() !== '' ? item.Knowledge : '未分类'}</span>
+                                    <span>🕒 复习日：${item.ReviewDate \vert{}\vert{} item['Review Date'] \vert{}\vert{} '无'} (错于 ${item.diffDays} 天前)</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            container.innerHTML = htmlOutput;
+        }
+
+        // 尝试从线上 fetch 数据（适用于 GitHub 线上环境）
+        fetch('jamie-data.json?' + new Date().getTime())
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                renderData(data);
+            })
+            .catch(err => {
+                console.warn('本地直接打开无法 fetch 外部 json，已自动切换为内置测试数据预览：', err);
+                
+                // 本地双击打开时的降级测试数据
+                const mockData = [
+                    {
+                        Child: "Jamie",
+                        Subject: "英语",
+                        Pitfall: "#英语翻译 #提建议句型 #宾语从句改疑问语序",
+                        Knowledge: "英语核心句型与语法",
+                        Title: "(豆包记录·翻译) ①这个周末为什么不和我们一起徒步呢？②你能教我怎么使用3D打印机吗？",
+                        Reason: "提建议句型和“疑问词+不定式”结构不会用，容易写成中式英语。",
+                        Analysis: "① Why not go hiking with us this weekend? ② Could you teach me how to use a 3D printer?",
+                        ReviewDate: "2026-09-08" // 假设较早的日期，使其满足 > 6 天的条件
+                    },
+                    {
+                        Child: "Jamie",
+                        Subject: "数学",
+                        Pitfall: "#完全平方公式 #添括号法则 #公式变形",
+                        Knowledge: "代数式恒等变形",
+                        Title: "(4) 计算 88² 的简便方法",
+                        Reason: "拆项与计算均错，心算或凑数过程逻辑不清。",
+                        Analysis: "简便拆项：原式 = (90 - 2)² = 90² - 2×90×2 + 2² = 8100 - 360 + 4 = 7744",
+                        ReviewDate: "2026-09-08"
+                    }
+                ];
+                
+                renderData(mockData);
+            });
+    </script>
+</body>
+</html>
