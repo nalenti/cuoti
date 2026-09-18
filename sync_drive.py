@@ -10,9 +10,6 @@ from googleapiclient.errors import HttpError
 sa_key_info = json.loads(os.environ["GCP_SA_KEY"])
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
 
-# 🎯 网盘根目录同步，不再依赖固定的子文件夹 ID
-FOLDER_ID = '' 
-
 # 📂 GitHub 仓库中存放错题的目标文件夹名称（已设置为 study）
 TARGET_DIR = "study"
 
@@ -26,8 +23,8 @@ def main():
     )
     service = build('drive', 'v3', credentials=credentials)
 
-    # 3. 更稳妥的查询条件：查找根目录下、未被删除的所有文件
-    query = "trashed = false and 'root' in parents"
+    # 3. 修正后的查询：不限制 root 或子目录，直接抓取网盘里所有带 .md 的文件
+    query = "name contains '.md' and trashed = false"
 
     results = service.files().list(
         q=query, 
@@ -38,20 +35,15 @@ def main():
     files = results.get('files', [])
 
     if not files:
-        print("📭 谷歌网盘根目录下未找到任何文件")
+        print("📭 谷歌网盘中未找到任何 .md 文件")
         return
 
-    print(f"📄 共发现 {len(files)} 个云端文件，开始筛选并同步到仓库的 '{TARGET_DIR}' 目录下...")
+    print(f"📄 共发现 {len(files)} 个云端 Markdown 文件，开始同步到仓库的 '{TARGET_DIR}' 目录下...")
 
-    # 4. 循环遍历文件，过滤出文件名包含 .md 的文件并下载/导出
+    # 4. 循环遍历每一个找到的 .md 文件并依次下载/导出
     for file in files:
         file_id = file['id']
         file_name = file['name']
-        
-        # 只处理名字中包含 .md 的文件
-        if '.md' not in file_name:
-            continue
-
         print(f"----------------------------------------")
         print(f"📥 正在处理文件: {file_name}")
 
