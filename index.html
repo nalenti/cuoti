@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jamie 的错题本</title>
+    <!-- 引入 MathJax 完美渲染数学公式 -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         /* 全局基础样式 */
         body {
@@ -115,7 +117,7 @@
             line-height: 1.5;
         }
 
-        /* 3. 底部轻量元数据（左侧 Knowledge 类型，右侧 ReviewDate 日期） */
+        /* 3. 底部轻量元数据 */
         .card-footer {
             padding: 12px 20px;
             background: #fcfcfc;
@@ -167,11 +169,40 @@
     </div>
 
     <script>
+        // 核心记忆曲线筛选算法（优先 7 天前，无则取 > 7 天的最后一天）
+        function getMemoryCurveQuestions(allQuestions) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const processed = allQuestions.map(q => {
+                const dateStr = (q.ReviewDate || '').replace(/年|月/g, '-').replace(/日/g, '');
+                const targetDate = new Date(dateStr);
+                targetDate.setHours(0, 0, 0, 0);
+                const diffDays = Math.round((today - targetDate) / (1000 * 60 * 60 * 24));
+                return { ...q, diffDays };
+            });
+
+            let exactSeven = processed.filter(q => q.diffDays === 7);
+            
+            let selected = [];
+            if (exactSeven.length > 0) {
+                selected = exactSeven;
+            } else {
+                let olderThanSeven = processed.filter(q => q.diffDays > 7);
+                if (olderThanSeven.length > 0) {
+                    const minDiff = Math.min(...olderThanSeven.map(q => q.diffDays));
+                    selected = olderThanSeven.filter(q => q.diffDays === minDiff);
+                } else {
+                    selected = processed;
+                }
+            }
+            return selected;
+        }
+
         // 核心渲染逻辑函数
         function renderData(data) {
             const container = document.getElementById('container');
             
-            // 过滤出 Jamie 的数据
             const jamieData = data.filter(item => {
                 const childVal = item.Child || '';
                 return childVal.trim().toLowerCase() === 'jamie';
@@ -182,9 +213,15 @@
                 return;
             }
 
-            // 按照 Subject（科目）分组
+            const targetQuestions = getMemoryCurveQuestions(jamieData);
+
+            if (targetQuestions.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#888;">今日暂无符合复习周期的错题</p>';
+                return;
+            }
+
             const groupedData = {};
-            jamieData.forEach(item => {
+            targetQuestions.forEach(item => {
                 const subject = item.Subject && item.Subject.trim() !== '' ? item.Subject.trim() : '未分类科目';
                 if (!groupedData[subject]) {
                     groupedData[subject] = [];
@@ -192,7 +229,6 @@
                 groupedData[subject].push(item);
             });
 
-            // 渲染分类 HTML
             let htmlOutput = '';
             for (const [subject, items] of Object.entries(groupedData)) {
                 htmlOutput += `
@@ -200,13 +236,11 @@
                         <div class="subject-title">📖 ${subject} (${items.length} 题)</div>
                         ${items.map(item => `
                             <div class="card">
-                                <!-- 1. 顶部核心考点：绑定 Notion 里的 Pitfall -->
                                 <div class="card-header-topic">
                                     <span class="topic-badge">📌 核心考点</span>
                                     <h3 class="topic-title">${item.Pitfall && item.Pitfall.trim() !== '' ? item.Pitfall : '综合应用与知识点'}</h3>
                                 </div>
 
-                                <!-- 2. 主体内容区：题目、错误原因、正确解析 -->
                                 <div class="card-body">
                                     <div class="question-text">
                                         ${item.Title && item.Title.trim() !== '' ? item.Title : '无标题题目'}
@@ -222,10 +256,9 @@
                                     </div>
                                 </div>
 
-                                <!-- 3. 底部：左侧绑定 Knowledge（类型），右侧绑定 ReviewDate（复习日） -->
                                 <div class="card-footer">
                                     <span class="card-knowledge">🏷️ 类型: ${item.Knowledge && item.Knowledge.trim() !== '' ? item.Knowledge : '未分类'}</span>
-                                    <span>🕒 复习日：${item.ReviewDate || '无'}</span>
+                                    <span>🕒 复习日：${item.ReviewDate \vert{}\vert{} '无'} (距今 ${item.diffDays} 天)</span>
                                 </div>
                             </div>
                         `).join('')}
@@ -234,9 +267,14 @@
             }
 
             container.innerHTML = htmlOutput;
+
+            // 触发 MathJax 重新渲染数学公式
+            if (window.MathJax) {
+                MathJax.typesetPromise().catch((err) => console.log('MathJax 渲染错误:', err));
+            }
         }
 
-        // 尝试从线上 fetch 数据（适用于 GitHub 线上环境）
+        // 尝试从线上 fetch 数据
         fetch('jamie-data.json?' + new Date().getTime())
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok');
@@ -248,27 +286,26 @@
             .catch(err => {
                 console.warn('本地直接打开无法 fetch 外部 json，已自动切换为内置测试数据预览：', err);
                 
-                // 本地双击打开时的降级测试数据（完美对应 Pitfall 和 Knowledge 字段）
                 const mockData = [
                     {
                         Child: "Jamie",
                         Subject: "英语",
-                        Pitfall: "#英语翻译 #提建议句型 #宾语从句改疑问语序",
+                        Pitfall: "#英语翻译 #提建议句型",
                         Knowledge: "英语核心句型与语法",
-                        Title: "(豆包记录·翻译) ①这个周末为什么不和我们一起徒步呢？②你能教我怎么使用3D打印机吗？",
-                        Reason: "提建议句型和“疑问词+不定式”结构不会用，容易写成中式英语。",
-                        Analysis: "① Why not go hiking with us this weekend? ② Could you teach me how to use a 3D printer?",
-                        ReviewDate: "2026-09-17"
+                        Title: "(豆包记录·翻译) ①这个周末为什么不和我们一起徒步呢？",
+                        Reason: "提建议句型不会用。",
+                        Analysis: "① Why not go hiking with us this weekend?",
+                        ReviewDate: "2026-09-11"
                     },
                     {
                         Child: "Jamie",
                         Subject: "数学",
-                        Pitfall: "#完全平方公式 #添括号法则 #公式变形",
+                        Pitfall: "#完全平方公式",
                         Knowledge: "代数式恒等变形",
-                        Title: "(4) 计算 88² 的简便方法",
-                        Reason: "拆项与计算均错，心算或凑数过程逻辑不清。",
-                        Analysis: "简便拆项：原式 = (90 - 2)² = 90² - 2×90×2 + 2² = 8100 - 360 + 4 = 7744",
-                        ReviewDate: "2026-09-17"
+                        Title: "(4) 计算 $88^2$ 的简便方法",
+                        Reason: "拆项与计算均错。",
+                        Analysis: "简便拆项：原式 = $(90 - 2)^2 = 7744$",
+                        ReviewDate: "2026-09-10"
                     }
                 ];
                 
