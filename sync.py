@@ -52,17 +52,22 @@ def sync_notion_data():
                 title_val = extract_value(val)
                 break
         if not title_val:
-            title_val = extract_value(props.get("标...") or props.get("Title") or props.get("Name"))
+            title_val = extract_value(props.get("标题") or props.get("Title") or props.get("Name"))
+
+        # 整合错误原因内容，确保前端模板读取 Reason / Error / ErrorCause 都能拿到值
+        error_content = extract_value(props.get("Error") or props.get("ErrorCause") or props.get("Reason"))
 
         item = {
             "Title": title_val,
             "Child": extract_value(props.get("Child")),
             "Subject": extract_value(props.get("Subject") or props.get("科目")),
-            "ReviewDate": extract_value(props.get("ReviewDate")),
-            "Reason": extract_value(props.get("Reason")),
+            "ReviewDate": extract_value(props.get("Review Date") or props.get("ReviewDate")), # 👈 完美兼容带空格的 Review Date
+            "Reason": error_content,      # 适配网页端可能读取 Reason
+            "Error": error_content,       # 适配网页端可能读取 Error
+            "ErrorCause": error_content,  # 适配网页端可能读取 ErrorCause
             "Knowledge": extract_value(props.get("Knowledge")),
             "Analysis": extract_value(props.get("Analysis")),
-            "Pitfall": extract_value(props.get("Pitfall"))  # 👈 新增：把 Notion 里的 Pitfall 字段同步进来！
+            "Pitfall": extract_value(props.get("Pitfall"))
         }
         data_list.append(item)
 
