@@ -8,6 +8,11 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    
+    # 🎯 核心补充：赋予 Actions 写入仓库代码的权限，防止 git push 报错
+    permissions:
+      contents: write
+
     steps:
       - name: 1. 迁出代码
         uses: actions/checkout@v4
