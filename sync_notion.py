@@ -94,46 +94,36 @@ def md_text_to_notion_blocks(md_content):
             
     return blocks
 
-# ================= 这里就是精准适配你 Notion 结构的 build_properties 函数 =================
 def build_properties(title, metadata):
-    """
-    根据 Notion 实际数据库列名构造 payload
-    """
+    """根据 Notion 实际数据库列名构造 payload"""
     properties = {
-        # 1. 主标题列 (Aa 标题)
         "标题": {
             "title": [{"text": {"content": title}}]
         }
     }
     
-    # 2. Child 文本列 (＝ Child)
     if "Child" in metadata:
         properties["Child"] = {
             "rich_text": [{"text": {"content": str(metadata["Child"])}}]
         }
         
-    # 3. Subject 文本列 (＝ Subject)
     if "Subject" in metadata:
         properties["Subject"] = {
             "rich_text": [{"text": {"content": str(metadata["Subject"])}}]
         }
         
-    # 4. ReviewDate 文本列 (＝ ReviewDate)
     if "ReviewDate" in metadata:
         properties["ReviewDate"] = {
             "rich_text": [{"text": {"content": str(metadata["ReviewDate"])}}]
         }
 
-    # 5. Reason 文本列 (＝ Reason)
     if "Reason" in metadata:
         properties["Reason"] = {
             "rich_text": [{"text": {"content": str(metadata["Reason"])}}]
         }
 
-    # 6. Knowledge 多选标签列 (≡ Knowledge)
     if "Knowledge" in metadata:
         knowledge_val = str(metadata["Knowledge"])
-        # 提取出 #标签1 #标签2 里的文字
         tags = re.findall(r'#([^\s#]+)', knowledge_val)
         if tags:
             properties["Knowledge"] = {
@@ -144,26 +134,22 @@ def build_properties(title, metadata):
                 "multi_select": [{"name": knowledge_val[:100]}]
             }
 
-    # 7. ErrorCause 文本列 (＝ ErrorCause)
     if "ErrorCause" in metadata:
         properties["ErrorCause"] = {
             "rich_text": [{"text": {"content": str(metadata["ErrorCause"])[:2000]}}]
         }
 
-    # 8. Pitfall 文本列 (＝ Pitfall)
     if "Pitfall" in metadata:
         properties["Pitfall"] = {
             "rich_text": [{"text": {"content": str(metadata["Pitfall"])[:2000]}}]
         }
 
-    # 9. Analysis 文本列 (＝ Analysis)
     if "Analysis" in metadata:
         properties["Analysis"] = {
             "rich_text": [{"text": {"content": str(metadata["Analysis"])[:2000]}}]
         }
 
     return properties
-# =========================================================================================
 
 def main():
     if not NOTION_TOKEN or not DATABASE_ID:
