@@ -45,7 +45,7 @@ def sync_notion_data():
     for page in results:
         props = page.get("properties", {})
         
-        # 智能寻找标题列（无论是 标...、Name、Title 还是 Notion 默认的第一个属性）
+        # 智能寻找标题列
         title_val = ""
         for key, val in props.items():
             if val.get("type") == "title":
@@ -61,7 +61,8 @@ def sync_notion_data():
             "ReviewDate": extract_value(props.get("ReviewDate")),
             "Reason": extract_value(props.get("Reason")),
             "Knowledge": extract_value(props.get("Knowledge")),
-            "Analysis": extract_value(props.get("Analysis"))
+            "Analysis": extract_value(props.get("Analysis")),
+            "Pitfall": extract_value(props.get("Pitfall"))  # 👈 新增：把 Notion 里的 Pitfall 字段同步进来！
         }
         data_list.append(item)
 
