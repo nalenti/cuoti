@@ -1,36 +1,33 @@
 import os
 import re
 import requests
-import frontmatter  # 需要 pip install python-frontmatter
 
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
 DATABASE_ID = os.environ.get("DATABASE_ID")
 TARGET_DIR = "study"
 
 def get_notion_existing_titles(headers):
-    """查询 Notion 数据库中已存在的页面标题"""
+    """查询 Notion 数据库中已存在的页面标题（这里用 '文件名 - 错题标题' 作为唯一标识，防止重复）"""
     existing_titles = set()
     url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
     payload = {}
-    
+
     while True:
         response = requests.post(url, headers=headers, json=payload)
         if response.status_code != 200:
             print(f"❌ 查询 Notion 数据库失败: {response.text}")
             break
-            
+        
         data = response.json()
         results = data.get("results", [])
         
         for page in results:
             properties = page.get("properties", {})
-            title_prop = properties.get("标题", {})
-            title_array = title_prop.get("title", [])
-            if title_array:
-                title_text = title_array[0].get("text", {}).get("content", "")
-                if title_text:
-                    existing_titles.add(title_text)
-                    
+            title_prop = properties.get("标题", {}) or properties.get("Name", {})
+            title_list = title_prop.get("title", [])
+            if title_list:
+                existing_titles.add(title_list[0].get("text", {}).get("content", ""))
+                
         if data.get("has_more"):
             payload["start_cursor"] = data.get("next_cursor")
         else:
@@ -38,122 +35,56 @@ def get_notion_existing_titles(headers):
             
     return existing_titles
 
-def md_text_to_notion_blocks(md_content):
-    """将 Markdown 正文切分转换为 Notion Blocks"""
-    blocks = []
-    lines = md_content.split("\n")
-    
-    for line in lines:
-        line_str = line.strip()
-        if not line_str:
-            continue
-            
-        if line_str.startswith("# "):
-            blocks.append({
-                "object": "block",
-                "type": "heading_1",
-                "heading_1": {"rich_text": [{"type": "text", "text": {"content": line_str[2:].strip()}}]}
-            })
-        elif line_str.startswith("## "):
-            blocks.append({
-                "object": "block",
-                "type": "heading_2",
-                "heading_2": {"rich_text": [{"type": "text", "text": {"content": line_str[3:].strip()}}]}
-            })
-        elif line_str.startswith("### "):
-            blocks.append({
-                "object": "block",
-                "type": "heading_3",
-                "heading_3": {"rich_text": [{"type": "text", "text": {"content": line_str[4:].strip()}}]}
-            })
-        elif line_str.startswith("> "):
-            blocks.append({
-                "object": "block",
-                "type": "quote",
-                "quote": {"rich_text": [{"type": "text", "text": {"content": line_str[2:].strip()}}]}
-            })
-        elif line_str.startswith("- ") or line_str.startswith("* "):
-            blocks.append({
-                "object": "block",
-                "type": "bulleted_list_item",
-                "bulleted_list_item": {"rich_text": [{"type": "text", "text": {"content": line_str[2:].strip()}}]}
-            })
-        elif line_str in ["---", "***", "___"]:
-            blocks.append({
-                "object": "block",
-                "type": "divider",
-                "divider": {}
-            })
-        else:
-            content = line_str[:2000]
-            blocks.append({
-                "object": "block",
-                "type": "paragraph",
-                "paragraph": {"rich_text": [{"type": "text", "text": {"content": content}}]}
-            })
-            
-    return blocks
+def parse_multiple_questions(file_path):
+    """解析文件：提取顶部全局属性，并把正文按“错题 X”切分成多个独立的错题"""
+    with open(file_path, "r", encoding="utf-8") as f:
+        content = f.read()
 
-def build_properties(title, metadata):
-    """根据 Notion 实际数据库列名构造 payload"""
-    properties = {
-        "标题": {
-            "title": [{"text": {"content": title}}]
-        }
+    def extract_field(pattern, text):
+        match = re.search(pattern, text)
+        return match.group(1).strip() if match else ""
+
+    # 1. 提取顶部全局属性
+    base_data = {
+        "Child": extract_field(r"Child:\s*(.*)", content),
+        "Subject": extract_field(r"Subject:\s*(.*)", content),
+        "ReviewDate": extract_field(r"ReviewDate:\s*(.*)", content),
+        "Reason": extract_field(r"Reason:\s*(.*)", content),
+        "Knowledge": extract_field(r"Knowledge:\s*(.*)", content),
+        "ErrorCause": extract_field(r"ErrorCause:\s*(.*)", content),
+        "Pitfall": extract_field(r"Pitfall:\s*(.*)", content),
+        "Analysis": extract_field(r"Analysis:\s*(.*)", content),
     }
+
+    # 2. 按“错题 X：”把正文切分为多个独立错题
+    # 正则匹配形如 “错题 1：xxx” 或 “错题1：xxx”
+    raw_filename = os.path.splitext(os.path.basename(file_path))[0]
     
-    if "Child" in metadata:
-        properties["Child"] = {
-            "rich_text": [{"text": {"content": str(metadata["Child"])}}]
-        }
+    # 按照 “错题 \d+” 进行分割
+    parts = re.split(r'(?=错题\s*\d+[:：])', content)
+    questions = []
+
+    for part in parts:
+        part = part.strip()
+        if not part or not re.match(r'^错题\s*\d+[:：]', part):
+            continue
         
-    if "Subject" in metadata:
-        properties["Subject"] = {
-            "rich_text": [{"text": {"content": str(metadata["Subject"])}}]
-        }
-        
-    if "ReviewDate" in metadata:
-        properties["ReviewDate"] = {
-            "rich_text": [{"text": {"content": str(metadata["ReviewDate"])}}]
-        }
+        # 提取当前错题的标题（例如：错题 1：多项式相乘转化平方差与完全平方）
+        first_line = part.split('\n')[0].strip()
+        # 组合唯一标题，例如：2026-09-18-Jamie-数学-完全平方公式 [错题 1：多项式相乘...]
+        unique_title = f"{raw_filename} | {first_line}"
 
-    if "Reason" in metadata:
-        properties["Reason"] = {
-            "rich_text": [{"text": {"content": str(metadata["Reason"])}}]
-        }
+        questions.append({
+            "title": unique_title,
+            "data": base_data,
+            "content": part
+        })
 
-    if "Knowledge" in metadata:
-        knowledge_val = str(metadata["Knowledge"])
-        tags = re.findall(r'#([^\s#]+)', knowledge_val)
-        if tags:
-            properties["Knowledge"] = {
-                "multi_select": [{"name": tag} for tag in tags]
-            }
-        else:
-            properties["Knowledge"] = {
-                "multi_select": [{"name": knowledge_val[:100]}]
-            }
+    return questions
 
-    if "ErrorCause" in metadata:
-        properties["ErrorCause"] = {
-            "rich_text": [{"text": {"content": str(metadata["ErrorCause"])[:2000]}}]
-        }
-
-    if "Pitfall" in metadata:
-        properties["Pitfall"] = {
-            "rich_text": [{"text": {"content": str(metadata["Pitfall"])[:2000]}}]
-        }
-
-    if "Analysis" in metadata:
-        properties["Analysis"] = {
-            "rich_text": [{"text": {"content": str(metadata["Analysis"])[:2000]}}]
-        }
-
-    return properties
-
-def main():
+def sync_to_notion():
     if not NOTION_TOKEN or not DATABASE_ID:
-        print("⚠️ 未检测到 NOTION_TOKEN 或 DATABASE_ID，跳过 Notion 同步。")
+        print("❌ 错误: 未设置 NOTION_TOKEN 或 DATABASE_ID 环境变量。")
         return
 
     headers = {
@@ -162,55 +93,79 @@ def main():
         "Notion-Version": "2022-06-28"
     }
 
-    print("🔍 正在获取 Notion 数据库中已有的错题清单...")
+    print("🔍 正在获取 Notion 数据库中已有的记录清单...")
     existing_titles = get_notion_existing_titles(headers)
-    print(f"📊 Notion 中当前已存在 {len(existing_titles)} 条错题记录。")
+    print(f"📊 Notion 中当前已存在 {len(existing_titles)} 条记录。")
 
     if not os.path.exists(TARGET_DIR):
-        print(f"📭 本地未找到 {TARGET_DIR} 目录")
+        print(f"❌ 目录 {TARGET_DIR} 不存在。")
         return
 
-    local_files = [f for f in os.listdir(TARGET_DIR) if f.endswith('.md')]
-    print(f"📁 本地 {TARGET_DIR}/ 目录下共发现 {len(local_files)} 个 Markdown 文件。")
+    md_files = [f for f in os.listdir(TARGET_DIR) if f.endswith(".md")]
+    print(f"📁 本地 {TARGET_DIR}/ 目录下共发现 {len(md_files)} 个 Markdown 文件。")
 
-    new_count = 0
-    for file_name in local_files:
-        title = file_name[:-3]
+    success_count = 0
 
-        if title not in existing_titles:
-            print(f"✨ 发现新错题（增量）: {title}，正在写入 Notion...")
-            file_path = os.path.join(TARGET_DIR, file_name)
-            
-            try:
-                post = frontmatter.load(file_path)
-                metadata = post.metadata
-                body_content = post.content
-            except Exception as e:
-                print(f"⚠️ 解析文件 {file_name} 失败: {e}")
-                metadata = {}
-                body_content = ""
+    for filename in md_files:
+        file_path = os.path.join(TARGET_DIR, filename)
+        question_list = parse_multiple_questions(file_path)
 
-            properties = build_properties(title, metadata)
-            children_blocks = md_text_to_notion_blocks(body_content)
-            
-            create_payload = {
+        print(f"📄 文件 [{filename}] 中共解析出 {len(question_list)} 个独立错题。")
+
+        for q in question_list:
+            title = q["title"]
+            if title in existing_titles:
+                print(f"⏩ 跳过已存在: {title}")
+                continue
+
+            data = q["data"]
+            print(f"✨ 正在写入 Notion: {title}...")
+
+            payload = {
                 "parent": {"database_id": DATABASE_ID},
-                "properties": properties,
-                "children": children_blocks[:100]
+                "properties": {
+                    "标题": {
+                        "title": [{"text": {"content": title[:200]}}]  # Notion 标题有字数限制，截取前200字
+                    },
+                    "Child": {
+                        "select": {"name": data["Child"]} if data["Child"] else None
+                    },
+                    "Subject": {
+                        "select": {"name": data["Subject"]} if data["Subject"] else None
+                    },
+                    "ReviewDate": {
+                        "date": {"start": data["ReviewDate"]} if data["ReviewDate`"] else None
+                    },
+                    "Reason": {
+                        "rich_text": [{"text": {"content": data["Reason"][:2000]}}] if data["Reason"] else []
+                    },
+                    "Knowledge": {
+                        "rich_text": [{"text": {"content": data["Knowledge"][:2000]}}] if data["Knowledge"] else []
+                    },
+                    "ErrorCause": {
+                        "rich_text": [{"text": {"content": data["ErrorCause"][:2000]}}] if data["ErrorCause"] else []
+                    },
+                    "Pitfall": {
+                        "rich_text": [{"text": {"content": data["Pitfall"][:2000]}}] if data["Pitfall"] else []
+                    },
+                    "Analysis": {
+                        "rich_text": [{"text": {"content": data["Analysis"][:2000]}}] if data["Analysis"] else []
+                    }
+                }
             }
 
-            create_url = "https://api.notion.com/v1/pages"
-            res = requests.post(create_url, headers=headers, json=create_payload)
-            
-            if res.status_code == 200:
-                print(f"✅ [{title}] 成功完整写入 Notion！")
-                new_count += 1
-            else:
-                print(f"❌ [{title}] 写入失败: {res.text}")
-        else:
-            print(f"⏩ [{title}] 已存在于 Notion 中，跳过。")
+            # 清理值为 None 的字段
+            payload["properties"] = {k: v for k, v in payload["properties"].items() if v is not None and v.get("select") != {"name": None}}
 
-    print(f"🎉 Notion 增量同步完成！本次共成功新增 {new_count} 条错题。")
+            response = requests.post("https://api.notion.com/v1/pages", headers=headers, json=payload)
+            
+            if response.status_code == 200:
+                print(f"✅ 成功写入: {title}")
+                success_count += 1
+            else:
+                print(f"❌ 写入失败 ({title}): {response.text}")
+
+    print(f"\n🎉 Notion 多题目拆分增量同步完成！本次共成功新增 {success_count} 条错题。")
 
 if __name__ == "__main__":
-    main()
+    sync_to_notion()
