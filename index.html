@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>错题本复习（大于6天调试版）</title>
+    <title>错题本复习（仅显示最近的一天）</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -42,9 +42,9 @@
         .error-item:last-child {
             border-bottom: none;
         }
-        .tag-debug {
-            background: #fef3c7;
-            color: #d97706;
+        .tag {
+            background: #eef2ff;
+            color: #4f46e5;
             padding: 4px 10px;
             border-radius: 6px;
             font-size: 12px;
@@ -64,7 +64,7 @@
 </head>
 <body>
 
-    <h2>📖 错题本复习（筛选大于6天的错题）</h2>
+    <h2 id="page-title">📖 错题本复习</h2>
     <div id="error-container">加载中...</div>
 
     <script>
@@ -93,7 +93,7 @@
 
             const now = new Date();
 
-            // 1. 计算天数
+            // 1. 计算每一道题距离今天的天数
             const processedData = data.map(item => {
                 let diffDays = 0;
                 if (item.ReviewDate) {
@@ -105,24 +105,28 @@
                 return { ...item, diffDays };
             });
 
-            // 2. 严格筛选大于 6 天的题目
-            const targetList = processedData.filter(item => item.diffDays > 6);
+            // 2. 筛选出所有大于 6 天的题目
+            const greaterThanSix = processedData.filter(item => item.diffDays > 6);
 
-            // 如果没有符合条件的题目
-            if (targetList.length === 0) {
-                // 为了方便排查，把所有题目其实算出来是多少天，在控制台打印一下
-                console.log("所有题目的计算天数情况：", processedData);
-                container.innerHTML = `
-                    <div class="empty-tip">
-                        🎉 没有找到距离今天超过 6 天的错题。<br><br>
-                        <span style="font-size: 13px; color: #9ca3af;">
-                          （提示：F12 打开浏览器控制台 Console，可以看到所有题目解析出的具体天数，看看是不是日期格式没对上。）
-                        </span>
-                    </div>`;
+            // 如果没有大于 6 天的题目
+            if (greaterThanSix.length === 0) {
+                container.innerHTML = '<div class="empty-tip">🎉 太棒了，暂无超过 6 天的历史错题需要复习！</div>';
                 return;
             }
 
-            // 3. 按科目分组
+            // 3. 找出所有满足条件的天数（去重并排序）
+            const allDays = [...new Set(greaterThanSix.map(item => item.diffDays))].sort((a, b) => a - b);
+            
+            // 获取其中最小的那一天（即距离今天最近的一天，比如第 7 天、第 8 天等）
+            const targetDay = allDays[0];
+
+            // 动态修改标题，提示当前显示的是第几天的数据
+            document.getElementById('page-title').innerText = `📖 错题本复习（错于 ${targetDay} 天前的题目）`;
+
+            // 4. 只保留这一天的错题
+            const targetList = greaterThanSix.filter(item => item.diffDays === targetDay);
+
+            // 5. 按科目分组
             const groups = {};
             targetList.forEach(item => {
                 const subject = item.Subject || '未分类';
@@ -132,7 +136,7 @@
                 groups[subject].push(item);
             });
 
-            // 4. 渲染
+            // 6. 渲染到页面
             for (const [subject, items] of Object.entries(groups)) {
                 const subjectDiv = document.createElement('div');
                 subjectDiv.className = 'subject-group';
@@ -146,7 +150,7 @@
 
                     itemDiv.innerHTML = `
                         <span>${titleText}</span>
-                        <span class="tag-debug">距今 ${item.diffDays} 天 (>6)</span>
+                        <span class="tag">错于 ${item.diffDays} 天前</span>
                     `;
                     subjectDiv.appendChild(itemDiv);
                 });
