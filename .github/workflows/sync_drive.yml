@@ -1,0 +1,35 @@
+name: Sync from Google Drive
+
+on:
+  # 支持每天定时自动运行（比如每天晚上 11 点，UTC 时间 15:00）
+  schedule:
+    - cron: '0 15 * * *'
+  # 也支持你在 GitHub 网页端手动点击按钮随时触发
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. 迁出代码
+        uses: actions/checkout@v4
+
+      - name: 2. 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 3. 安装依赖库
+        run: pip install google-api-python-client google-auth
+
+      - name: 4. 运行同步脚本
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: python sync_drive.py
+
+      - name: 5. 自动提交并推送到仓库
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "bot@github.com"
+          git add .
+          git diff --staged --quiet || (git commit -m "auto: sync new markdown from google drive" && git push)
