@@ -94,12 +94,11 @@
 
             const now = new Date();
 
-            // 1. 计算每道题距离今天过去几天
+            // 1. 计算每道题距离今天过去几天（已适配大写字段 ReviewDate）[cite: 7, 8]
             const processedData = data.map(item => {
                 let diffDays = 0;
-                // 如果你的 JSON 日期字段名不是 date，可以在这里修改（例如 item.time）
-                if (item.date) {
-                    const itemDate = new Date(item.date);
+                if (item.ReviewDate) {
+                    const itemDate = new Date(item.ReviewDate);
                     if (!isNaN(itemDate)) {
                         diffDays = Math.floor((now - itemDate) / (1000 * 60 * 60 * 24));
                     }
@@ -107,7 +106,7 @@
                 return { ...item, diffDays };
             });
 
-            // 2. 核心筛选：只保留大于 6 天的错题（不显示最近 0~6 天的题目）
+            // 2. 核心筛选：只保留大于 6 天的错题[cite: 8]
             const targetList = processedData.filter(item => item.diffDays > 6);
 
             // 如果没有符合条件的题目
@@ -116,11 +115,10 @@
                 return;
             }
 
-            // 3. 按科目（Subject）进行分组
+            // 3. 按科目（Subject）进行分组（已适配大写字段 Subject）[cite: 7, 8]
             const groups = {};
             targetList.forEach(item => {
-                // 如果你的 JSON 科目字段名不是 subject，在这里修改
-                const subject = item.subject || '未分类';
+                const subject = item.Subject || '未分类';
                 if (!groups[subject]) {
                     groups[subject] = [];
                 }
@@ -137,8 +135,8 @@
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'error-item';
                     
-                    // 适配你的题目内容字段（默认优先取 title，其次取 content）
-                    const titleText = item.title || item.content || '无题目内容';
+                    // 适配你的题目内容字段 Title[cite: 7, 8]
+                    const titleText = item.Title || item.content || '无题目内容';
 
                     itemDiv.innerHTML = `
                         <span>${titleText}</span>
