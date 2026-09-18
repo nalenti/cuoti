@@ -13,10 +13,30 @@
             margin: 0 auto;
             padding: 30px 20px;
         }
+        /* 主标题靠左 */
         h1 {
-            text-align: center;
+            text-align: left;
             color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        /* 顶部导航按钮样式调整（放最上面） */
+        .top-nav-btn {
             margin-bottom: 30px;
+            text-align: left;
+        }
+        .top-nav-btn a {
+            text-decoration: none;
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.2s;
+            display: inline-block;
+        }
+        .top-nav-btn a:hover {
+            background: #0056b3;
         }
         .subject-group {
             margin-bottom: 40px;
@@ -114,32 +134,19 @@
             font-size: 12px;
             font-weight: 500;
         }
-        .nav-btn {
-            text-align: center;
-            margin: 40px 0;
-        }
-        .nav-btn a {
-            text-decoration: none;
-            background: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-        .nav-btn a:hover {
-            background: #0056b3;
-        }
     </style>
 </head>
 <body>
 
-    <h1 id="page-title">📚 Jamie 的错题本</h1>
-    <div id="container">正在加载错题数据...</div>
-
-    <div class="nav-btn">
+    <!-- 1. 切换按钮放到了最上方 -->
+    <div class="top-nav-btn">
         <a href="coco.html">👉 切换到 Coco 的错题本</a>
     </div>
+
+    <!-- 3. 主标题靠左 -->
+    <h1 id="page-title">📚 Jamie 的错题本</h1>
+    
+    <div id="container">正在加载错题数据...</div>
 
     <script>
         function renderData(data) {
@@ -189,9 +196,10 @@
             
             const targetDay = allDays[0];
 
+            // 2. 移除了副标题的天数提示，只保留纯净的标题
             const titleElement = document.getElementById('page-title');
             if (titleElement) {
-                titleElement.innerHTML = '📚 Jamie 的错题本 <span style="font-size: 15px; color: #6b7280; display: block; margin-top: 6px; font-weight: normal;">（当前集中复习：错于 ' + targetDay + ' 天前的错题）</span>';
+                titleElement.textContent = '📚 Jamie 的错题本';
             }
 
             const targetList = greaterThanSix.filter(function(item) {
