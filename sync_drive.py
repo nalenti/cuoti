@@ -10,8 +10,8 @@ from googleapiclient.errors import HttpError
 sa_key_info = json.loads(os.environ["GCP_SA_KEY"])
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
 
-# 🎯 谷歌网盘中指定的错题文件夹 ID
-FOLDER_ID = '1zbKKSJsRktHeDIKQc-RZ-1fH-DApfEBZ' 
+# 🎯 改动 1：将 FOLDER_ID 设为空（表示直接扫描根目录，或者不再按子文件夹 ID 过滤）
+FOLDER_ID = '' 
 
 # 📂 GitHub 仓库中存放错题的目标文件夹名称（已设置为 study）
 TARGET_DIR = "study"
@@ -26,11 +26,8 @@ def main():
     )
     service = build('drive', 'v3', credentials=credentials)
 
-    # 3. 构建查询条件：查找该文件夹下所有 .md 文件且未被删除
-    query = "name contains '.md' and trashed = false"
-    
-    if FOLDER_ID:
-        query += f" and '{FOLDER_ID}' in parents"
+    # 3. 🎯 改动 2：构建查询条件：查找根目录下（'root' in parents）、名字包含 .md 且未被删除的文件
+    query = "name contains '.md' and trashed = false and 'root' in parents"
 
     results = service.files().list(
         q=query, 
@@ -41,12 +38,12 @@ def main():
     files = results.get('files', [])
 
     if not files:
-        print("📭 指定的谷歌网盘文件夹中未找到任何 .md 文件")
+        print("📭 谷歌网盘根目录下未找到任何 .md 文件")
         return
 
     print(f"📄 共发现 {len(files)} 个云端 Markdown 文件，开始同步到仓库的 '{TARGET_DIR}' 目录下...")
 
-    # 4. 循环遍历每一个找到的 .md 文件并依次下载/导出
+    # 4. 循环遍历每一个找到 .md 的文件并依次下载/导出
     for file in files:
         file_id = file['id']
         file_name = file['name']
