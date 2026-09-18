@@ -42,7 +42,7 @@ def get_notion_existing_pages(headers):
     return page_map
 
 def parse_multiple_questions(file_path):
-    """精准解析文件：顶部全局属性 + 错题块专属内容"""
+    """精准解析文件：让每个错题块的内容完美对应 Notion 的各个列"""
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
@@ -57,10 +57,6 @@ def parse_multiple_questions(file_path):
         "Subject": extract_global("Subject", content),
         "ReviewDate": extract_global("ReviewDate", content),
         "Reason": extract_global("Reason", content),
-        "Knowledge": extract_global("Knowledge", content),
-        "ErrorCause": extract_global("ErrorCause", content),
-        "Pitfall": extract_global("Pitfall", content),
-        "Analysis": extract_global("Analysis", content),
     }
 
     raw_filename = os.path.splitext(os.path.basename(file_path))[0]
@@ -79,17 +75,24 @@ def parse_multiple_questions(file_path):
         first_line = lines[0].strip()
         unique_title = f"{raw_filename} | {first_line}"
 
-        # 提取错题专属的各个标签内容
-        def get_block_field(tag, text):
-            match = re.search(rf"{tag}[：:]\s*(.*?)(?=\n[🎯📝❌✔️]|$)", text, re.DOTALL)
+        # 辅助函数：精准截取两个图标标签之间的文本内容
+        def get_between(start_str, end_strs, text):
+            # 构造正则，从 start_str 开始，直到遇到下一个标签或结尾
+            end_pattern = '|'.join([re.escape(e) for e in end_strs]) if end_strs else '$'
+            pattern = rf"{re.escape(start_str)}\s*(.*?)(?=\s*(?:{end_pattern})|$)"
+            match = re.search(pattern, text, re.DOTALL)
             return match.group(1).strip() if match else ""
 
-        q_knowledge = get_block_field("🎯 核心知识点与考点", part) or global_data["Knowledge"]
-        q_pitfall = get_block_field("⚠️ 思维误区与坑点提示", part) or global_data["Pitfall"]
-        
-        # 把原题、错误解答、正确解析拼到 Analysis 里，确保内容满满当当不留白
-        q_analysis = f"【原题】\n{get_block_field('📝 题目原题', part)}\n\n【错误解答】\n{get_block_field('❌ 错误解答与分析', part)}\n\n【正确解析】\n{get_block_field('✔️ 正确解析与推导', part)}"
+        # 定义块内的所有标签节点作为边界
+        tags = ["🎯 核心知识点与考点", "⚠️ 思维误区与坑点提示", "📝 题目原题", "❌ 错误解答与分析", "✔️ 正确解析与推导"]
 
+        q_knowledge = get_between("🎯 核心知识点与考点:", ["⚠️ 思维误区与坑点提示", "📝 题目原题", "❌ 错误解答与分析", "✔️ 正确解析与推导"], part)
+        q_pitfall = get_between("⚠️ 思维误区与坑点提示:", ["📝 题目原题", "❌ 错误解答与分析", "✔️ 正确解析与推导"], part)
+        q_question = get_between("📝 题目原题", ["❌ 错误解答与分析", "✔️ 正确解析与推导"], part)
+        q_error = get_between("❌ 错误解答与分析", ["✔️ 正确解析与推导"], part)
+        q_analysis = get_between("✔️ 正确解析与推导", [], part)
+
+        # 组装对应关系
         questions.append({
             "title": unique_title,
             "data": {
@@ -97,10 +100,10 @@ def parse_multiple_questions(file_path):
                 "Subject": global_data["Subject"],
                 "ReviewDate": global_data["ReviewDate"],
                 "Reason": global_data["Reason"],
-                "Knowledge": q_knowledge,
-                "ErrorCause": global_data["ErrorCause"],
-                "Pitfall": q_pitfall,
-                "Analysis": q_analysis
+                "Knowledge": q_knowledge,   # 对应 Notion 的 Knowledge 列
+                "Pitfall": q_pitfall,       # 对应 Notion 的 Pitfall 列
+                "ErrorCause": q_error,      # 对应 Notion 的 ErrorCause 列（错误解答与分析）
+                "Analysis": f"【题目原题】\n{q_question}\n\n【正确解析与推导】\n{q_analysis}"  # 对应 Notion 的 Analysis 列
             }
         })
 
