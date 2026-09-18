@@ -42,25 +42,30 @@ def get_notion_existing_pages(headers):
     return page_map
 
 def parse_multiple_questions(file_path):
-    """解析文件：精准切分每个错题区块，并独立提取各自的属性和内容"""
+    """精准解析文件：顶部全局属性 + 错题块专属内容"""
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    raw_filename = os.path.splitext(os.path.basename(file_path))[0]
-    
-    # 先把文件顶部的全局属性（如 Child, Subject, ReviewDate）提取出来作为兜底
-    def extract_global_field(key, text):
-        pattern = rf"{key}:\s*(.+?)(?=\s+(?:Child|Subject|ReviewDate|Reason|Knowledge|ErrorCause|Pitfall|Analysis):|$)"
+    # 1. 提取文件头部的全局属性
+    def extract_global(key, text):
+        pattern = rf"{key}:\s*(.+?)(?=\s+(?:Subject|ReviewDate|Reason|Knowledge|ErrorCause|Pitfall|Analysis):|$)"
         match = re.search(pattern, text, re.IGNORECASE)
         return match.group(1).strip() if match else ""
 
     global_data = {
-        "Child": extract_global_field("Child", content),
-        "Subject": extract_global_field("Subject", content),
-        "ReviewDate": extract_global_field("ReviewDate", content),
+        "Child": extract_global("Child", content),
+        "Subject": extract_global("Subject", content),
+        "ReviewDate": extract_global("ReviewDate", content),
+        "Reason": extract_global("Reason", content),
+        "Knowledge": extract_global("Knowledge", content),
+        "ErrorCause": extract_global("ErrorCause", content),
+        "Pitfall": extract_global("Pitfall", content),
+        "Analysis": extract_global("Analysis", content),
     }
 
-    # 按“错题 X”把正文切分为多个独立区块
+    raw_filename = os.path.splitext(os.path.basename(file_path))[0]
+    
+    # 2. 按“错题 X”切分独立区块
     parts = re.split(r'(?=错题\s*\d+[:：])', content)
     questions = []
 
@@ -69,30 +74,34 @@ def parse_multiple_questions(file_path):
         if not part or not re.match(r'^错题\s*\d+[:：]', part):
             continue
         
-        first_line = part.split('\n')[0].strip()
+        # 提取当前错题的第一行作为小标题
+        lines = part.split('\n')
+        first_line = lines[0].strip()
         unique_title = f"{raw_filename} | {first_line}"
 
-        # 针对当前独立的错题小区块，提取它内部专属的各个字段
-        def extract_local_field(key, block_text):
-            # 允许匹配当前字段，直到遇到下一个字段名或文本结尾
-            pattern = rf"{key}[：:]\s*(.+?)(?=\s+(?:Reason|Knowledge|ErrorCause|Pitfall|Analysis|Child|Subject|ReviewDate)[：:]|$)"
-            match = re.search(pattern, block_text, re.DOTALL | re.IGNORECASE)
+        # 提取错题专属的各个标签内容
+        def get_block_field(tag, text):
+            match = re.search(rf"{tag}[：:]\s*(.*?)(?=\n[🎯📝❌✔️]|$)", text, re.DOTALL)
             return match.group(1).strip() if match else ""
 
-        q_data = {
-            "Child": extract_local_field("Child", part) or global_data["Child"],
-            "Subject": extract_local_field("Subject", part) or global_data["Subject"],
-            "ReviewDate": extract_local_field("ReviewDate", part) or global_data["ReviewDate"],
-            "Reason": extract_local_field("Reason", part),
-            "Knowledge": extract_local_field("Knowledge", part),
-            "ErrorCause": extract_local_field("ErrorCause", part),
-            "Pitfall": extract_local_field("Pitfall", part),
-            "Analysis": extract_local_field("Analysis", part),
-        }
+        q_knowledge = get_block_field("🎯 核心知识点与考点", part) or global_data["Knowledge"]
+        q_pitfall = get_block_field("⚠️ 思维误区与坑点提示", part) or global_data["Pitfall"]
+        
+        # 把原题、错误解答、正确解析拼到 Analysis 里，确保内容满满当当不留白
+        q_analysis = f"【原题】\n{get_block_field('📝 题目原题', part)}\n\n【错误解答】\n{get_block_field('❌ 错误解答与分析', part)}\n\n【正确解析】\n{get_block_field('✔️ 正确解析与推导', part)}"
 
         questions.append({
             "title": unique_title,
-            "data": q_data
+            "data": {
+                "Child": global_data["Child"],
+                "Subject": global_data["Subject"],
+                "ReviewDate": global_data["ReviewDate"],
+                "Reason": global_data["Reason"],
+                "Knowledge": q_knowledge,
+                "ErrorCause": global_data["ErrorCause"],
+                "Pitfall": q_pitfall,
+                "Analysis": q_analysis
+            }
         })
 
     return questions
