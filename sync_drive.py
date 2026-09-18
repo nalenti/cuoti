@@ -10,62 +10,80 @@ from googleapiclient.errors import HttpError
 sa_key_info = json.loads(os.environ["GCP_SA_KEY"])
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
 
+# 🎯 谷歌网盘中指定的错题文件夹 ID
+FOLDER_ID = '1zbKKSJsRktHeDIKQc-RZ-1fH-DApfEBZ' 
+
+# 📂 GitHub 仓库中存放错题的目标文件夹名称（已设置为 study）
+TARGET_DIR = "study"
+
 def main():
-    # 1. 授权登录 Google Drive
+    # 1. 确保本地目标文件夹存在，如果不存在则自动创建
+    os.makedirs(TARGET_DIR, exist_ok=True)
+
+    # 2. 授权登录 Google Drive
     credentials = service_account.Credentials.from_service_account_info(
         sa_key_info, scopes=SCOPES
     )
     service = build('drive', 'v3', credentials=credentials)
 
-    # 2. 搜索云盘中最新的 .md 文件
+    # 3. 构建查询条件：查找该文件夹下所有 .md 文件且未被删除
     query = "name contains '.md' and trashed = false"
+    
+    if FOLDER_ID:
+        query += f" and '{FOLDER_ID}' in parents"
+
     results = service.files().list(
         q=query, 
-        pageSize=5, 
+        pageSize=50, 
         orderBy="createdTime desc",
         fields="files(id, name, mimeType, createdTime)"
     ).execute()
     files = results.get('files', [])
 
     if not files:
-        print("📭 谷歌网盘中未找到任何 .md 文件")
+        print("📭 指定的谷歌网盘文件夹中未找到任何 .md 文件")
         return
 
-    # 获取最新的一份文件
-    latest_file = files[0]
-    file_id = latest_file['id']
-    file_name = latest_file['name']
-    print(f"📄 发现最新云端文件: {file_name}")
+    print(f"📄 共发现 {len(files)} 个云端 Markdown 文件，开始同步到仓库的 '{TARGET_DIR}' 目录下...")
 
-    fh = io.BytesIO()
+    # 4. 循环遍历每一个找到的 .md 文件并依次下载/导出
+    for file in files:
+        file_id = file['id']
+        file_name = file['name']
+        print(f"----------------------------------------")
+        print(f"📥 正在处理文件: {file_name}")
 
-    # 3. 智能下载/导出：先尝试直接下载，如果遇到 Google Docs 限制则自动切换为 export 导出
-    try:
-        print("📥 正在尝试直接下载文件...")
-        request = service.files().get_media(fileId=file_id)
-        downloader = MediaIoBaseDownload(fh, request)
-        done = False
-        while not done:
-            status, done = downloader.next_chunk()
-    except HttpError as e:
-        if "fileNotDownloadable" in str(e) or "Only files with binary content can be downloaded" in str(e):
-            print("🔄 检测到该文件为在线文档格式，自动切换为 Google Docs 导出模式...")
-            fh = io.BytesIO()
-            request = service.files().export_media(fileId=file_id, mimeType='text/plain')
+        fh = io.BytesIO()
+
+        # 智能容错：直接下载，如果遇到 Google Docs 在线文档限制则自动切换为 export 导出
+        try:
+            request = service.files().get_media(fileId=file_id)
             downloader = MediaIoBaseDownload(fh, request)
             done = False
             while not done:
                 status, done = downloader.next_chunk()
-        else:
-            # 如果是其他错误，直接抛出
-            raise e
+        except HttpError as e:
+            if "fileNotDownloadable" in str(e) or "Only files with binary content can be downloaded" in str(e):
+                print(f"🔄 [{file_name}] 为在线文档格式，切换为导出模式...")
+                fh = io.BytesIO()
+                request = service.files().export_media(fileId=file_id, mimeType='text/plain')
+                downloader = MediaIoBaseDownload(fh, request)
+                done = False
+                while not done:
+                    status, done = downloader.next_chunk()
+            else:
+                raise e
 
-    # 4. 保存到本地仓库目录（统一使用 utf-8 编码写入）
-    file_content = fh.getvalue().decode('utf-8')
-    with open(file_name, "w", encoding="utf-8") as f:
-        f.write(file_content)
-        
-    print(f"✅ 成功将 {file_name} 抓取并保存到仓库！")
+        # 5. 组合路径并保存到指定的子文件夹中
+        file_path = os.path.join(TARGET_DIR, file_name)
+        file_content = fh.getvalue().decode('utf-8')
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(file_content)
+            
+        print(f"✅ [{file_name}] 成功同步并存入 {file_path}！")
+
+    print(f"----------------------------------------")
+    print("🎉 所有文件同步完成！")
 
 if __name__ == "__main__":
     main()
