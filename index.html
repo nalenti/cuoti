@@ -146,7 +146,7 @@
             const container = document.getElementById('container');
             container.innerHTML = '';
             
-            const jamieData = data.filter(item => {
+            const jamieData = data.filter(function(item) {
                 const childVal = item.Child || '';
                 return childVal.trim().toLowerCase() === 'jamie';
             });
@@ -158,7 +158,7 @@
 
             const now = new Date();
 
-            const processedData = jamieData.map(item => {
+            const processedData = jamieData.map(function(item) {
                 let diffDays = 0;
                 const dateStr = item.ReviewDate || item['Review Date'];
                 if (dateStr) {
@@ -167,28 +167,39 @@
                         diffDays = Math.floor((now - itemDate) / (1000 * 60 * 60 * 24));
                     }
                 }
-                return { ...item, diffDays };
+                return Object.assign({}, item, { diffDays: diffDays });
             });
 
-            const greaterThanSix = processedData.filter(item => item.diffDays > 6);
+            const greaterThanSix = processedData.filter(function(item) {
+                return item.diffDays > 6;
+            });
 
             if (greaterThanSix.length === 0) {
                 container.innerHTML = '<div class="card" style="padding: 40px; text-align: center; color: #6b7280;">🎉 太棒了，暂无超过 6 天的历史错题需要复习！</div>';
                 return;
             }
 
-            const allDays = [...new Set(greaterThanSix.map(item => item.diffDays))].sort((a, b) => a - b);
+            const allDays = [];
+            greaterThanSix.forEach(function(item) {
+                if (allDays.indexOf(item.diffDays) === -1) {
+                    allDays.push(item.diffDays);
+                }
+            });
+            allDays.sort(function(a, b) { return a - b; });
+            
             const targetDay = allDays[0];
 
             const titleElement = document.getElementById('page-title');
             if (titleElement) {
-                titleElement.innerHTML = `📚 Jamie 的错题本 <span style="font-size: 15px; color: #6b7280; display: block; margin-top: 6px; font-weight: normal;">（当前集中复习：错于 ${targetDay} 天前的错题）</span>`;
+                titleElement.innerHTML = '📚 Jamie 的错题本 <span style="font-size: 15px; color: #6b7280; display: block; margin-top: 6px; font-weight: normal;">（当前集中复习：错于 ' + targetDay + ' 天前的错题）</span>';
             }
 
-            const targetList = greaterThanSix.filter(item => item.diffDays === targetDay);
+            const targetList = greaterThanSix.filter(function(item) {
+                return item.diffDays === targetDay;
+            });
 
             const groupedData = {};
-            targetList.forEach(item => {
+            targetList.forEach(function(item) {
                 const subject = item.Subject && item.Subject.trim() !== '' ? item.Subject.trim() : '未分类科目';
                 if (!groupedData[subject]) {
                     groupedData[subject] = [];
@@ -197,51 +208,55 @@
             });
 
             let htmlOutput = '';
-            for (const [subject, items] of Object.entries(groupedData)) {
-                htmlOutput += `
-                    <div class="subject-group">
-                        <div class="subject-title">📖 ${subject} (${items.length} 题)</div>
-                        ${items.map(item => `
-                            <div class="card">
-                                <div class="card-header-topic">
-                                    <span class="topic-badge">📌 核心考点</span>
-                                    <h3 class="topic-title">${item.Pitfall && item.Pitfall.trim() !== '' ? item.Pitfall : '综合应用与知识点'}</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="question-text">
-                                        ${item.Title && item.Title.trim() !== '' ? item.Title : '无标题题目'}
-                                    </div>
-                                    <div class="analysis-box">
-                                        <div class="error-reason">
-                                            ❌ <strong>错误原因：</strong> ${item.Reason || item.Error || item.ErrorCause || '无'}
-                                        </div>
-                                        <div class="correct-solution">
-                                            ✔️ <strong>正确解析：</strong> ${item.Analysis || '无'}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer">
-                                    <span class="card-knowledge">🏷️ 类型: ${item.Knowledge && item.Knowledge.trim() !== '' ? item.Knowledge : '未分类'}</span>
-                                    <span>🕒 复习日：${item.ReviewDate \vert{}\vert{} item['Review Date'] \vert{}\vert{} '无'} (错于 ${item.diffDays} 天前)</span>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
+            for (const subject in groupedData) {
+                if (Object.prototype.hasOwnProperty.call(groupedData, subject)) {
+                    const items = groupedData[subject];
+                    htmlOutput += '<div class="subject-group">';
+                    htmlOutput += '<div class="subject-title">📖 ' + subject + ' (' + items.length + ' 题)</div>';
+                    
+                    for (let i = 0; i < items.length; i++) {
+                        const item = items[i];
+                        const pitfall = item.Pitfall && item.Pitfall.trim() !== '' ? item.Pitfall : '综合应用与知识点';
+                        const title = item.Title && item.Title.trim() !== '' ? item.Title : '无标题题目';
+                        const reason = item.Reason || item.Error || item.ErrorCause || '无';
+                        const analysis = item.Analysis || '无';
+                        const knowledge = item.Knowledge && item.Knowledge.trim() !== '' ? item.Knowledge : '未分类';
+                        const reviewDate = item.ReviewDate || item['Review Date'] || '无';
+
+                        htmlOutput += '<div class="card">';
+                        htmlOutput += '<div class="card-header-topic">';
+                        htmlOutput += '<span class="topic-badge">📌 核心考点</span>';
+                        htmlOutput += '<h3 class="topic-title">' + pitfall + '</h3>';
+                        htmlOutput += '</div>';
+                        htmlOutput += '<div class="card-body">';
+                        htmlOutput += '<div class="question-text">' + title + '</div>';
+                        htmlOutput += '<div class="analysis-box">';
+                        htmlOutput += '<div class="error-reason">❌ <strong>错误原因：</strong> ' + reason + '</div>';
+                        htmlOutput += '<div class="correct-solution">✔️ <strong>正确解析：</strong> ' + analysis + '</div>';
+                        htmlOutput += '</div>';
+                        htmlOutput += '</div>';
+                        htmlOutput += '<div class="card-footer">';
+                        htmlOutput += '<span class="card-knowledge">🏷️ 类型: ' + knowledge + '</span>';
+                        htmlOutput += '<span>🕒 复习日：' + reviewDate + ' (错于 ' + item.diffDays + ' 天前)</span>';
+                        htmlOutput += '</div>';
+                        htmlOutput += '</div>';
+                    }
+                    htmlOutput += '</div>';
+                }
             }
 
             container.innerHTML = htmlOutput;
         }
 
         fetch('jamie-data.json?' + new Date().getTime())
-            .then(response => {
+            .then(function(response) {
                 if (!response.ok) throw new Error('Network response was not ok');
                 return response.json();
             })
-            .then(data => {
+            .then(function(data) {
                 renderData(data);
             })
-            .catch(err => {
+            .catch(function(err) {
                 console.warn('本地直接打开无法 fetch 外部 json，已自动切换为内置测试数据预览：', err);
                 
                 const mockData = [
