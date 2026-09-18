@@ -7,7 +7,7 @@ DATABASE_ID = os.environ.get("DATABASE_ID")
 TARGET_DIR = "study"
 
 def get_notion_existing_titles(headers):
-    """查询 Notion 数据库中已存在的页面标题"""
+    """查询 Notion 数据库中已存在的页面标题（防止重复同步）"""
     existing_titles = set()
     url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
     payload = {}
@@ -23,10 +23,16 @@ def get_notion_existing_titles(headers):
         
         for page in results:
             properties = page.get("properties", {})
-            title_prop = properties.get("标题", {}) or properties.get("Name", {})
-            title_list = title_prop.get("title", [])
-            if title_list:
-                existing_titles.add(title_list[0].get("text", {}).get("content", ""))
+            # 智能匹配标题列
+            title_val = ""
+            for key, val in properties.items():
+                if val.get("type") == "title":
+                    t_list = val.get("title", [])
+                    if t_list:
+                        title_val = "".join([x.get("plain_text", "") for x in t_list])
+                    break
+            if title_val:
+                existing_titles.add(title_val)
                 
         if data.get("has_more"):
             payload["start_cursor"] = data.get("next_cursor")
@@ -46,7 +52,7 @@ def parse_multiple_questions(file_path):
         match = re.search(pattern, text, re.IGNORECASE)
         return match.group(1).strip() if match else ""
 
-    # 1. 提取顶部全局属性
+    # 1. 提取顶部全局属性（完全对齐你的 Notion 字段名）
     base_data = {
         "Child": extract_field("Child", content),
         "Subject": extract_field("Subject", content),
@@ -118,46 +124,39 @@ def sync_to_notion():
             data = q["data"]
             print(f"✨ 正在写入 Notion: {title}...")
 
-            # 验证并清理日期格式（只保留前10位 YYYY-MM-DD，防止多余字符）
+            # 验证并清理日期格式（YYYY-MM-DD）
             review_date = data["ReviewDate"][:10] if data["ReviewDate"] else None
             if review_date and not re.match(r'^\d{4}-\d{2}-\d{2}$', review_date):
                 review_date = None
 
-            payload = {
-                "parent": {"database_id": DATABASE_ID},
-                "properties": {
-                    "标题": {
-                        "title": [{"text": {"content": title[:200]}}]
-                    },
-                    "Child": {
-                        "select": {"name": data["Child"]} if data["Child"] else None
-                    },
-                    "Subject": {
-                        "select": {"name": data["Subject"]} if data["Subject"] else None
-                    },
-                    "ReviewDate": {
-                        "date": {"start": review_date} if review_date else None
-                    },
-                    "Reason": {
-                        "rich_text": [{"text": {"content": data["Reason"][:2000]}}] if data["Reason"] else []
-                    },
-                    "Knowledge": {
-                        "rich_text": [{"text": {"content": data["Knowledge"][:2000]}}] if data["Knowledge"] else []
-                    },
-                    "ErrorCause": {
-                        "rich_text": [{"text": {"content": data["ErrorCause"][:2000]}}] if data["ErrorCause"] else []
-                    },
-                    "Pitfall": {
-                        "rich_text": [{"text": {"content": data["Pitfall"][:2000]}}] if data["Pitfall"] else []
-                    },
-                    "Analysis": {
-                        "rich_text": [{"text": {"content": data["Analysis"][:2000]}}] if data["Analysis"] else []
-                    }
+            # 严格按照你 Notion 数据库的属性类型（Select / Date / Rich_Text）构造 Payload
+            properties = {
+                "标题": {
+                    "title": [{"text": {"content": title[:200]}}]
                 }
             }
 
-            # 清理值为 None 的属性字段
-            payload["properties"] = {k: v for k, v in payload["properties"].items() if v is not None and v.get("select") != {"name": None}}
+            if data["Child"]:
+                properties["Child"] = {"select": {"name": data["Child"]}}
+            if data["Subject"]:
+                properties["Subject"] = {"select": {"name": data["Subject"]}}
+            if review_date:
+                properties["ReviewDate"] = {"date": {"start": review_date}}
+            if data["Reason"]:
+                properties["Reason"] = {"rich_text": [{"text": {"content": data["Reason"][:2000]}}]}
+            if data["Knowledge"]:
+                properties["Knowledge"] = {"rich_text": [{"text": {"content": data["Knowledge"][:2000]}}]}
+            if data["ErrorCause"]:
+                properties["ErrorCause"] = {"rich_text": [{"text": {"content": data["ErrorCause"][:2000]}}]}
+            if data["Pitfall"]:
+                properties["Pitfall"] = {"rich_text": [{"text": {"content": data["Pitfall"][:2000]}}]}
+            if data["Analysis"]:
+                properties["Analysis"] = {"rich_text": [{"text": {"content": data["Analysis"][:2000]}}]}
+
+            payload = {
+                "parent": {"database_id": DATABASE_ID},
+                "properties": properties
+            }
 
             response = requests.post("https://api.notion.com/v1/pages", headers=headers, json=payload)
             
@@ -170,4 +169,4 @@ def sync_to_notion():
     print(f"\n🎉 Notion 多题目拆分增量同步完成！本次共成功新增 {success_count} 条错题。")
 
 if __name__ == "__main__":
-    sync_to_notion()
+    sync_notion_data_func = sync_to_notion()
