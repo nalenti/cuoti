@@ -42,19 +42,20 @@ def get_notion_existing_pages(headers):
     return page_map
 
 def parse_multiple_questions(file_path):
-    """精准解析文件：将 Error 内容作为标题，去掉 Reason，合并 ErrorCause"""
+    """精准解析文件：Review Date 对应带空格的属性，ErrorCause 内容写入 Error"""
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     def extract_global(key, text):
-        pattern = rf"{key}:\s*(.+?)(?=\s+(?:Subject|ReviewDate|Reason|Knowledge|ErrorCause|Pitfall|Analysis):|$)"
+        pattern = rf"{key}:\s*(.+?)(?=\s+(?:Subject|ReviewDate|Review Date|Reason|Knowledge|ErrorCause|Pitfall|Analysis):|$)"
         match = re.search(pattern, text, re.IGNORECASE)
         return match.group(1).strip() if match else ""
 
     global_data = {
         "Child": extract_global("Child", content),
         "Subject": extract_global("Subject", content),
-        "ReviewDate": extract_global("ReviewDate", content),
+        # 同时兼容 ReviewDate 和 Review Date 的文件写法
+        "ReviewDate": extract_global("Review Date", content) or extract_global("ReviewDate", content),
     }
 
     parts = re.split(r'(?=错题\s*\d+[:：])', content)
@@ -78,19 +79,19 @@ def parse_multiple_questions(file_path):
         q_error = get_field_content("❌ 错误解答与分析", ["✔️ 正确解析与推导"])
         q_analysis = get_field_content("✔️ 正确解析与推导", [])
 
-        # 组合出 Error 的完整内容（原题 + 错误解答 + ErrorCause 的延伸含义）
+        # 标题及 Error 列的内容：包含 题目原题 + 错误解答与分析 (ErrorCause内容)
         error_column_content = f"【题目原题】\n{q_question}\n\n【错误解答与分析】\n{q_error}"
 
         questions.append({
-            "title": error_column_content,  # 直接将 Error 内容作为 Notion 的标题（第一列）
+            "title": error_column_content,  # 错误内容直接作为 Notion 的标题（第一列）
             "data": {
                 "Child": global_data["Child"],
                 "Subject": global_data["Subject"],
                 "ReviewDate": global_data["ReviewDate"],
                 "Knowledge": q_knowledge,
                 "Pitfall": q_pitfall,
-                "ErrorCause": q_error,          # 保留内部 ErrorCause 字段值但不写入 Reason
-                "Error": error_column_content,  # 对应 Error 列
+                "ErrorCause": q_error,          # 保留内部 ErrorCause 数据
+                "Error": q_error,               # 按照要求：ErrorCause 的内容写到 Error 里
                 "Analysis": q_analysis          # 对应 Analysis 列（纯正解，不含原题）
             }
         })
@@ -133,7 +134,7 @@ def sync_to_notion():
 
             properties = {
                 "标题": {
-                    "title": [{"text": {"content": title[:2000]}}]  # 标题使用完整的 Error 内容
+                    "title": [{"text": {"content": title[:2000]}}]
                 }
             }
 
@@ -141,9 +142,9 @@ def sync_to_notion():
                 properties["Child"] = {"rich_text": [{"text": {"content": data["Child"][:2000]}}]}
             if data["Subject"]:
                 properties["Subject"] = {"rich_text": [{"text": {"content": data["Subject"][:2000]}}]}
+            # 注意：此处严格对应 Notion 属性名为带有空格的 "Review Date"
             if data["ReviewDate"]:
-                properties["ReviewDate"] = {"rich_text": [{"text": {"content": data["ReviewDate"][:2000]}}]}
-            # 注意：此处故意不包含 Reason，彻底去掉该列
+                properties["Review Date"] = {"rich_text": [{"text": {"content": data["ReviewDate"][:2000]}}]}
             if data["Knowledge"]:
                 properties["Knowledge"] = {"rich_text": [{"text": {"content": data["Knowledge"][:2000]}}]}
             if data["ErrorCause"]:
