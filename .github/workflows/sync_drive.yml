@@ -1,35 +1,64 @@
-name: Sync from Google Drive
+import os
+import json
+import io
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseDownload
 
-on:
-  # 支持每天定时自动运行（比如每天晚上 11 点，UTC 时间 15:00）
-  schedule:
-    - cron: '0 15 * * *'
-  # 也支持你在 GitHub 网页端手动点击按钮随时触发
-  workflow_dispatch:
+# 从环境变量中读取刚才存入的 JSON 密钥
+sa_key_info = json.loads(os.environ["GCP_SA_KEY"])
+SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
 
-jobs:
-  sync:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 1. 迁出代码
-        uses: actions/checkout@v4
+def main():
+    # 1. 授权登录 Google Drive
+    credentials = service_account.Credentials.from_service_account_info(
+        sa_key_info, scopes=SCOPES
+    )
+    service = build('drive', 'v3', credentials=credentials)
 
-      - name: 2. 设置 Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+    # 2. 搜索云盘中最新的 .md 文件
+    query = "name contains '.md' and trashed = false"
+    results = service.files().list(
+        q=query, 
+        pageSize=5, 
+        orderBy="createdTime desc",
+        fields="files(id, name, mimeType, createdTime)"
+    ).execute()
+    files = results.get('files', [])
 
-      - name: 3. 安装依赖库
-        run: pip install google-api-python-client google-auth
+    if not files:
+        print("📭 谷歌网盘中未找到任何 .md 文件")
+        return
 
-      - name: 4. 运行同步脚本
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        run: python sync_drive.py
+    # 获取最新的一份文件
+    latest_file = files[0]
+    file_id = latest_file['id']
+    file_name = latest_file['name']
+    mime_type = latest_file.get('mimeType', '')
+    print(f"📄 发现最新云端文件: {file_name} (类型: {mime_type})")
 
-      - name: 5. 自动提交并推送到仓库
-        run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "bot@github.com"
-          git add .
-          git diff --staged --quiet || (git commit -m "auto: sync new markdown from google drive" && git push)
+    fh = io.BytesIO()
+
+    # 3. 区分类型下载或导出
+    if mime_type == 'application/vnd.google-apps.document':
+        # 如果是谷歌在线文档格式，使用 export 导出为纯文本
+        print("🔄 该文件为 Google Docs 在线格式，正在执行导出...")
+        request = service.files().export_media(fileId=file_id, mimeType='text/plain')
+    else:
+        # 如果是普通二进制文件，使用 get_media 下载
+        request = service.files().get_media(fileId=file_id)
+
+    downloader = MediaIoBaseDownload(fh, request)
+    done = False
+    while not done:
+        status, done = downloader.next_chunk()
+
+    # 4. 保存到本地仓库目录（统一使用 utf-8 编码写入）
+    file_content = fh.getvalue().decode('utf-8')
+    with open(file_name, "w", encoding="utf-8") as f:
+        f.write(file_content)
+        
+    print(f"✅ 成功将 {file_name} 导出并下载到仓库！")
+
+if __name__ == "__main__":
+    main()
