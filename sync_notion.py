@@ -42,7 +42,7 @@ def get_notion_existing_pages(headers):
     return page_map
 
 def parse_multiple_questions(file_path):
-    """精准解析文件：让每一个字段完美对齐 Notion 的每一列"""
+    """精准解析文件：将 Error 内容作为标题，去掉 Reason，合并 ErrorCause"""
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
@@ -55,11 +55,8 @@ def parse_multiple_questions(file_path):
         "Child": extract_global("Child", content),
         "Subject": extract_global("Subject", content),
         "ReviewDate": extract_global("ReviewDate", content),
-        "Reason": extract_global("Reason", content),
     }
 
-    raw_filename = os.path.splitext(os.path.basename(file_path))[0]
-    
     parts = re.split(r'(?=错题\s*\d+[:：])', content)
     questions = []
 
@@ -67,10 +64,6 @@ def parse_multiple_questions(file_path):
         part = part.strip()
         if not part or not re.match(r'^错题\s*\d+[:：]', part):
             continue
-        
-        lines = part.split('\n')
-        first_line = lines[0].strip()
-        unique_title = f"{raw_filename} | {first_line}"
 
         def get_field_content(start_marker, next_markers):
             escaped_markers = [re.escape(m) for m in next_markers]
@@ -85,21 +78,20 @@ def parse_multiple_questions(file_path):
         q_error = get_field_content("❌ 错误解答与分析", ["✔️ 正确解析与推导"])
         q_analysis = get_field_content("✔️ 正确解析与推导", [])
 
-        # 组合给 Error 列（题目原题 + 错误解答与分析）
+        # 组合出 Error 的完整内容（原题 + 错误解答 + ErrorCause 的延伸含义）
         error_column_content = f"【题目原题】\n{q_question}\n\n【错误解答与分析】\n{q_error}"
 
         questions.append({
-            "title": unique_title,
+            "title": error_column_content,  # 直接将 Error 内容作为 Notion 的标题（第一列）
             "data": {
                 "Child": global_data["Child"],
                 "Subject": global_data["Subject"],
                 "ReviewDate": global_data["ReviewDate"],
-                "Reason": global_data["Reason"],          # 对应 Reason 列（顶部标签）
-                "Knowledge": q_knowledge,                 # 对应 Knowledge 列
-                "Pitfall": q_pitfall,                     # 对应 Pitfall 列
-                "ErrorCause": q_error,                    # 对应 ErrorCause 列（纯错误分析）
-                "Error": error_column_content,            # 对应 Error 列（原题 + 错误作答）
-                "Analysis": q_analysis                    # 对应 Analysis 列（纯正解，不含原题）
+                "Knowledge": q_knowledge,
+                "Pitfall": q_pitfall,
+                "ErrorCause": q_error,          # 保留内部 ErrorCause 字段值但不写入 Reason
+                "Error": error_column_content,  # 对应 Error 列
+                "Analysis": q_analysis          # 对应 Analysis 列（纯正解，不含原题）
             }
         })
 
@@ -141,7 +133,7 @@ def sync_to_notion():
 
             properties = {
                 "标题": {
-                    "title": [{"text": {"content": title[:200]}}]
+                    "title": [{"text": {"content": title[:2000]}}]  # 标题使用完整的 Error 内容
                 }
             }
 
@@ -151,8 +143,7 @@ def sync_to_notion():
                 properties["Subject"] = {"rich_text": [{"text": {"content": data["Subject"][:2000]}}]}
             if data["ReviewDate"]:
                 properties["ReviewDate"] = {"rich_text": [{"text": {"content": data["ReviewDate"][:2000]}}]}
-            if data["Reason"]:
-                properties["Reason"] = {"rich_text": [{"text": {"content": data["Reason"][:2000]}}]}
+            # 注意：此处故意不包含 Reason，彻底去掉该列
             if data["Knowledge"]:
                 properties["Knowledge"] = {"rich_text": [{"text": {"content": data["Knowledge"][:2000]}}]}
             if data["ErrorCause"]:
@@ -166,7 +157,7 @@ def sync_to_notion():
 
             if title in page_map:
                 page_id = page_map[title]
-                print(f"🔄 正在智能更新已有页面: {title}...")
+                print(f"🔄 正在智能更新已有页面: {title[:30]}...")
                 response = requests.patch(
                     f"https://api.notion.com/v1/pages/{page_id}",
                     headers=headers,
@@ -174,7 +165,7 @@ def sync_to_notion():
                 )
                 action_type = "更新"
             else:
-                print(f"✨ 正在创建新页面: {title}...")
+                print(f"✨ 正在创建新页面: {title[:30]}...")
                 payload = {
                     "parent": {"database_id": DATABASE_ID},
                     "properties": properties
@@ -187,10 +178,10 @@ def sync_to_notion():
                 action_type = "新增"
 
             if response.status_code == 200:
-                print(f"✅ 成功{action_type}: {title}")
+                print(f"✅ 成功{action_type}")
                 success_count += 1
             else:
-                print(f"❌ {action_type}失败 ({title}): {response.text}")
+                print(f"❌ {action_type}失败: {response.text}")
 
     print(f"\n🎉 Notion 智能同步完成！本次共成功处理 {success_count} 条错题。")
 
