@@ -1,530 +1,155 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Jamie 的错题本</title>
-
+    <title>错题本复习</title>
     <style>
-
-        /* 全局基础样式 */
-
         body {
-
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-
-            background-color: #f8f9fa;
-
-            color: #333333;
-
-            max-width: 900px;
-
-            margin: 0 auto;
-
-            padding: 30px 20px;
-
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+            background-color: #f7f9fc;
+            color: #333;
         }
-
-
-        h1 {
-
-            text-align: center;
-
-            color: #2c3e50;
-
-            margin-bottom: 30px;
-
-        }
-
-
-        .subject-group {
-
-            margin-bottom: 40px;
-
-        }
-
-
-        .subject-title {
-
-            font-size: 20px;
-
-            color: #007bff;
-
-            border-bottom: 2px solid #007bff;
-
-            padding-bottom: 8px;
-
-            margin-bottom: 20px;
-
-            font-weight: 700;
-
-        }
-
-
-        /* 现代高颜值卡片容器 */
-
-        .card {
-
-            background: #ffffff;
-
-            padding: 0;
-
-            margin-bottom: 20px;
-
-            border-radius: 12px;
-
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-
-            overflow: hidden;
-
-            border: 1px solid #eaeaea;
-
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-        }
-
-
-        .card:hover {
-
-            transform: translateY(-2px);
-
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-
-        }
-
-
-        /* 1. 核心考点区（置于顶部：绑定 Pitfall） */
-
-        .card-header-topic {
-
-            background: linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
-
-            padding: 14px 20px;
-
-            border-bottom: 1px solid #e5e7eb;
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-        }
-
-
-        .topic-badge {
-
-            background: #4f46e5; /* 科技感主题色 */
-
-            color: #ffffff;
-
-            font-size: 12px;
-
-            font-weight: 600;
-
-            padding: 4px 8px;
-
-            border-radius: 6px;
-
-            letter-spacing: 0.5px;
-
-            flex-shrink: 0;
-
-        }
-
-
-        .topic-title {
-
-            margin: 0;
-
-            font-size: 16px;
-
-            font-weight: 700;
-
+        h2 {
             color: #1f2937;
-
+            margin-bottom: 20px;
         }
-
-
-        /* 2. 主体内容区 */
-
-        .card-body {
-
-            padding: 18px 20px;
-
+        .subject-group {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.05);
         }
-
-
-        .question-text {
-
-            font-size: 15px;
-
-            color: #374151;
-
-            line-height: 1.6;
-
-            margin-bottom: 16px;
-
-            font-weight: 500;
-
+        .subject-group h3 {
+            margin-top: 0;
+            color: #4f46e5;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 10px;
+            font-size: 18px;
         }
-
-
-        /* 错因与解析区块衬底 */
-
-        .analysis-box {
-
-            background: #f9fafb;
-
-            border-radius: 8px;
-
-            padding: 14px 16px;
-
+        .error-item {
             display: flex;
-
-            flex-direction: column;
-
-            gap: 10px;
-
-            border-left: 4px solid #4f46e5;
-
-        }
-
-
-        .error-reason {
-
-            font-size: 14px;
-
-            color: #dc2626; /* 警示红 */
-
-            line-height: 1.5;
-
-        }
-
-
-        .correct-solution {
-
-            font-size: 14px;
-
-            color: #059669; /* 护眼绿 */
-
-            line-height: 1.5;
-
-        }
-
-
-        /* 3. 底部轻量元数据（左侧 Knowledge 类型，右侧 ReviewDate 日期） */
-
-        .card-footer {
-
-            padding: 12px 20px;
-
-            background: #fcfcfc;
-
-            border-top: 1px solid #f3f4f6;
-
-            display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
-            font-size: 13px;
-
-            color: #6b7280;
-
+            padding: 12px 0;
+            border-bottom: 1px solid #f9fafb;
+            font-size: 15px;
         }
-
-
-        .card-knowledge {
-
-            background: #e0e7ff;
-
-            color: #3730a3;
-
-            padding: 2px 8px;
-
-            border-radius: 4px;
-
+        .error-item:last-child {
+            border-bottom: none;
+        }
+        .tag {
+            background: #eef2ff;
+            color: #4f46e5;
+            padding: 4px 10px;
+            border-radius: 6px;
             font-size: 12px;
-
             font-weight: 500;
-
+            white-space: nowrap;
+            margin-left: 15px;
         }
-
-
-        /* 底部导航按钮 */
-
-        .nav-btn {
-
+        .empty-tip {
             text-align: center;
-
-            margin: 40px 0;
-
+            color: #6b7280;
+            padding: 40px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-
-
-        .nav-btn a {
-
-            text-decoration: none;
-
-            background: #007bff;
-
-            color: white;
-
-            padding: 10px 20px;
-
-            border-radius: 8px;
-
-            font-weight: bold;
-
-            transition: background 0.2s;
-
-        }
-
-
-        .nav-btn a:hover {
-
-            background: #0056b3;
-
-        }
-
     </style>
-
 </head>
-
 <body>
 
-
-    <h1>📚 Jamie 的错题本</h1>
-
-    <div id="container">正在加载错题数据...</div>
-
-
-    <div class="nav-btn">
-
-        <a href="coco.html">👉 切换到 Coco 的错题本</a>
-
-    </div>
-
+    <h2>📖 错题本复习（7天以上历史错题）</h2>
+    <div id="error-container">加载中...</div>
 
     <script>
-
-        // 核心渲染逻辑函数
+        // 页面加载完成后自动获取并渲染数据
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('jamie-data.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络请求失败或文件未找到');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    renderData(data);
+                })
+                .catch(err => {
+                    console.error('加载数据失败:', err);
+                    document.getElementById('error-container').innerHTML = `
+                        <div class="empty-tip">加载数据失败，请检查 <code>jamie-data.json</code> 文件路径或网络。</div>
+                    `;
+                });
+        });
 
         function renderData(data) {
-
-            const container = document.getElementById('container');
-
-            
-
-            // 过滤出 Jamie 的数据
-
-            const jamieData = data.filter(item => {
-
-                const childVal = item.Child || '';
-
-                return childVal.trim().toLowerCase() === 'jamie';
-
-            });
-
-            
-
-            if (jamieData.length === 0) {
-
-                container.innerHTML = '<p style="text-align:center; color:#888;">暂无 Jamie 的错题记录</p>';
-
-                return;
-
-            }
-
-
-            // 按照 Subject（科目）分组
-
-            const groupedData = {};
-
-            jamieData.forEach(item => {
-
-                const subject = item.Subject && item.Subject.trim() !== '' ? item.Subject.trim() : '未分类科目';
-
-                if (!groupedData[subject]) {
-
-                    groupedData[subject] = [];
-
-                }
-
-                groupedData[subject].push(item);
-
-            });
-
-
-            // 渲染分类 HTML
-
-            let htmlOutput = '';
-
-            for (const [subject, items] of Object.entries(groupedData)) {
-
-                htmlOutput += `
-
-                    <div class="subject-group">
-
-                        <div class="subject-title">📖 ${subject} (${items.length} 题)</div>
-
-                        ${items.map(item => `
-
-                            <div class="card">
-
-                                <!-- 1. 顶部核心考点：绑定 Notion 里的 Pitfall -->
-
-                                <div class="card-header-topic">
-
-                                    <span class="topic-badge">📌 核心考点</span>
-
-                                    <h3 class="topic-title">${item.Pitfall && item.Pitfall.trim() !== '' ? item.Pitfall : '综合应用与知识点'}</h3>
-
-                                </div>
-
-
-                                <!-- 2. 主体内容区：题目、错误原因、正确解析 -->
-
-                                <div class="card-body">
-
-                                    <div class="question-text">
-
-                                        ${item.Title && item.Title.trim() !== '' ? item.Title : '无标题题目'}
-
-                                    </div>
-
-                                    
-
-                                    <div class="analysis-box">
-
-                                        <div class="error-reason">
-
-                                            ❌ <strong>错误原因：</strong> ${item.Reason || '无'}
-
-                                        </div>
-
-                                        <div class="correct-solution">
-
-                                            ✔️ <strong>正确解析：</strong> ${item.Analysis || '无'}
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- 3. 底部：左侧绑定 Knowledge（类型），右侧绑定 ReviewDate（复习日） -->
-
-                                <div class="card-footer">
-
-                                    <span class="card-knowledge">🏷️ 类型: ${item.Knowledge && item.Knowledge.trim() !== '' ? item.Knowledge : '未分类'}</span>
-
-                                    <span>🕒 复习日：${item.ReviewDate || '无'}</span>
-
-                                </div>
-
-                            </div>
-
-                        `).join('')}
-
-                    </div>
-
-                `;
-
-            }
-
-
-            container.innerHTML = htmlOutput;
-
-        }
-
-
-        // 尝试从线上 fetch 数据（适用于 GitHub 线上环境）
-
-        fetch('jamie-data.json?' + new Date().getTime())
-
-            .then(response => {
-
-                if (!response.ok) throw new Error('Network response was not ok');
-
-                return response.json();
-
-            })
-
-            .then(data => {
-
-                renderData(data);
-
-            })
-
-            .catch(err => {
-
-                console.warn('本地直接打开无法 fetch 外部 json，已自动切换为内置测试数据预览：', err);
-
-                
-
-                // 本地双击打开时的降级测试数据（完美对应 Pitfall 和 Knowledge 字段）
-
-                const mockData = [
-
-                    {
-
-                        Child: "Jamie",
-
-                        Subject: "英语",
-
-                        Pitfall: "#英语翻译 #提建议句型 #宾语从句改疑问语序",
-
-                        Knowledge: "英语核心句型与语法",
-
-                        Title: "(豆包记录·翻译) ①这个周末为什么不和我们一起徒步呢？②你能教我怎么使用3D打印机吗？",
-
-                        Reason: "提建议句型和“疑问词+不定式”结构不会用，容易写成中式英语。",
-
-                        Analysis: "① Why not go hiking with us this weekend? ② Could you teach me how to use a 3D printer?",
-
-                        ReviewDate: "2026-09-17"
-
-                    },
-
-                    {
-
-                        Child: "Jamie",
-
-                        Subject: "数学",
-
-                        Pitfall: "#完全平方公式 #添括号法则 #公式变形",
-
-                        Knowledge: "代数式恒等变形",
-
-                        Title: "(4) 计算 88² 的简便方法",
-
-                        Reason: "拆项与计算均错，心算或凑数过程逻辑不清。",
-
-                        Analysis: "简便拆项：原式 = (90 - 2)² = 90² - 2×90×2 + 2² = 8100 - 360 + 4 = 7744",
-
-                        ReviewDate: "2026-09-17"
-
+            const container = document.getElementById('error-container');
+            container.innerHTML = '';
+
+            const now = new Date();
+
+            // 1. 计算每道题距离今天过去几天
+            const processedData = data.map(item => {
+                let diffDays = 0;
+                // 如果你的 JSON 日期字段名不是 date，可以在这里修改（例如 item.time）
+                if (item.date) {
+                    const itemDate = new Date(item.date);
+                    if (!isNaN(itemDate)) {
+                        diffDays = Math.floor((now - itemDate) / (1000 * 60 * 60 * 24));
                     }
-
-                ];
-
-                
-
-                renderData(mockData);
-
+                }
+                return { ...item, diffDays };
             });
 
+            // 2. 核心筛选：只保留大于 6 天的错题（不显示最近 0~6 天的题目）
+            const targetList = processedData.filter(item => item.diffDays > 6);
+
+            // 如果没有符合条件的题目
+            if (targetList.length === 0) {
+                container.innerHTML = '<div class="empty-tip">🎉 太棒了，暂无超过 7 天需要复习的历史错题！</div>';
+                return;
+            }
+
+            // 3. 按科目（Subject）进行分组
+            const groups = {};
+            targetList.forEach(item => {
+                // 如果你的 JSON 科目字段名不是 subject，在这里修改
+                const subject = item.subject || '未分类';
+                if (!groups[subject]) {
+                    groups[subject] = [];
+                }
+                groups[subject].push(item);
+            });
+
+            // 4. 渲染到网页上
+            for (const [subject, items] of Object.entries(groups)) {
+                const subjectDiv = document.createElement('div');
+                subjectDiv.className = 'subject-group';
+                subjectDiv.innerHTML = `<h3>📚 ${subject} (${items.length} 题)</h3>`;
+
+                items.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'error-item';
+                    
+                    // 适配你的题目内容字段（默认优先取 title，其次取 content）
+                    const titleText = item.title || item.content || '无题目内容';
+
+                    itemDiv.innerHTML = `
+                        <span>${titleText}</span>
+                        <span class="tag">错于 ${item.diffDays} 天前</span>
+                    `;
+                    subjectDiv.appendChild(itemDiv);
+                });
+
+                container.appendChild(subjectDiv);
+            }
+        }
     </script>
-
 </body>
-
 </html>
