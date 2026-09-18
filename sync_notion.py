@@ -42,11 +42,10 @@ def get_notion_existing_pages(headers):
     return page_map
 
 def parse_multiple_questions(file_path):
-    """精准解析文件：让每个错题块的内容完美对应 Notion 的各个列"""
+    """精准解析文件：让每一个字段完美对齐 Notion 的每一列"""
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # 1. 提取文件头部的全局属性
     def extract_global(key, text):
         pattern = rf"{key}:\s*(.+?)(?=\s+(?:Subject|ReviewDate|Reason|Knowledge|ErrorCause|Pitfall|Analysis):|$)"
         match = re.search(pattern, text, re.IGNORECASE)
@@ -61,7 +60,6 @@ def parse_multiple_questions(file_path):
 
     raw_filename = os.path.splitext(os.path.basename(file_path))[0]
     
-    # 2. 按“错题 X”切分独立区块
     parts = re.split(r'(?=错题\s*\d+[:：])', content)
     questions = []
 
@@ -70,40 +68,38 @@ def parse_multiple_questions(file_path):
         if not part or not re.match(r'^错题\s*\d+[:：]', part):
             continue
         
-        # 提取当前错题的第一行作为小标题
         lines = part.split('\n')
         first_line = lines[0].strip()
         unique_title = f"{raw_filename} | {first_line}"
 
-        # 辅助函数：精准截取两个图标标签之间的文本内容
-        def get_between(start_str, end_strs, text):
-            # 构造正则，从 start_str 开始，直到遇到下一个标签或结尾
-            end_pattern = '|'.join([re.escape(e) for e in end_strs]) if end_strs else '$'
-            pattern = rf"{re.escape(start_str)}\s*(.*?)(?=\s*(?:{end_pattern})|$)"
-            match = re.search(pattern, text, re.DOTALL)
+        def get_field_content(start_marker, next_markers):
+            escaped_markers = [re.escape(m) for m in next_markers]
+            end_pattern = '|'.join(escaped_markers) if escaped_markers else '$'
+            pattern = rf"{re.escape(start_marker)}\s*(.*?)(?=\s*(?:{end_pattern})|$)"
+            match = re.search(pattern, part, re.DOTALL)
             return match.group(1).strip() if match else ""
 
-        # 定义块内的所有标签节点作为边界
-        tags = ["🎯 核心知识点与考点", "⚠️ 思维误区与坑点提示", "📝 题目原题", "❌ 错误解答与分析", "✔️ 正确解析与推导"]
+        q_knowledge = get_field_content("🎯 核心知识点与考点:", ["⚠️ 思维误区与坑点提示", "📝 题目原题", "❌ 错误解答与分析", "✔️ 正确解析与推导"])
+        q_pitfall = get_field_content("⚠️ 思维误区与坑点提示:", ["📝 题目原题", "❌ 错误解答与分析", "✔️ 正确解析与推导"])
+        q_question = get_field_content("📝 题目原题", ["❌ 错误解答与分析", "✔️ 正确解析与推导"])
+        q_error = get_field_content("❌ 错误解答与分析", ["✔️ 正确解析与推导"])
+        q_analysis = get_field_content("✔️ 正确解析与推导", [])
 
-        q_knowledge = get_between("🎯 核心知识点与考点:", ["⚠️ 思维误区与坑点提示", "📝 题目原题", "❌ 错误解答与分析", "✔️ 正确解析与推导"], part)
-        q_pitfall = get_between("⚠️ 思维误区与坑点提示:", ["📝 题目原题", "❌ 错误解答与分析", "✔️ 正确解析与推导"], part)
-        q_question = get_between("📝 题目原题", ["❌ 错误解答与分析", "✔️ 正确解析与推导"], part)
-        q_error = get_between("❌ 错误解答与分析", ["✔️ 正确解析与推导"], part)
-        q_analysis = get_between("✔️ 正确解析与推导", [], part)
+        # 组合给 Error 列（题目原题 + 错误解答与分析）
+        error_column_content = f"【题目原题】\n{q_question}\n\n【错误解答与分析】\n{q_error}"
 
-        # 组装对应关系
         questions.append({
             "title": unique_title,
             "data": {
                 "Child": global_data["Child"],
                 "Subject": global_data["Subject"],
                 "ReviewDate": global_data["ReviewDate"],
-                "Reason": global_data["Reason"],
-                "Knowledge": q_knowledge,   # 对应 Notion 的 Knowledge 列
-                "Pitfall": q_pitfall,       # 对应 Notion 的 Pitfall 列
-                "ErrorCause": q_error,      # 对应 Notion 的 ErrorCause 列（错误解答与分析）
-                "Analysis": f"【题目原题】\n{q_question}\n\n【正确解析与推导】\n{q_analysis}"  # 对应 Notion 的 Analysis 列
+                "Reason": global_data["Reason"],          # 对应 Reason 列（顶部标签）
+                "Knowledge": q_knowledge,                 # 对应 Knowledge 列
+                "Pitfall": q_pitfall,                     # 对应 Pitfall 列
+                "ErrorCause": q_error,                    # 对应 ErrorCause 列（纯错误分析）
+                "Error": error_column_content,            # 对应 Error 列（原题 + 错误作答）
+                "Analysis": q_analysis                    # 对应 Analysis 列（纯正解，不含原题）
             }
         })
 
@@ -163,6 +159,8 @@ def sync_to_notion():
                 properties["ErrorCause"] = {"rich_text": [{"text": {"content": data["ErrorCause"][:2000]}}]}
             if data["Pitfall"]:
                 properties["Pitfall"] = {"rich_text": [{"text": {"content": data["Pitfall"][:2000]}}]}
+            if data["Error"]:
+                properties["Error"] = {"rich_text": [{"text": {"content": data["Error"][:2000]}}]}
             if data["Analysis"]:
                 properties["Analysis"] = {"rich_text": [{"text": {"content": data["Analysis"][:2000]}}]}
 
