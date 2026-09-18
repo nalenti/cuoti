@@ -57,7 +57,6 @@ def parse_multiple_questions(file_path):
     }
 
     # 2. 按“错题 X：”把正文切分为多个独立错题
-    # 正则匹配形如 “错题 1：xxx” 或 “错题1：xxx”
     raw_filename = os.path.splitext(os.path.basename(file_path))[0]
     
     # 按照 “错题 \d+” 进行分割
@@ -69,9 +68,8 @@ def parse_multiple_questions(file_path):
         if not part or not re.match(r'^错题\s*\d+[:：]', part):
             continue
         
-        # 提取当前错题的标题（例如：错题 1：多项式相乘转化平方差与完全平方）
+        # 提取当前错题的标题
         first_line = part.split('\n')[0].strip()
-        # 组合唯一标题，例如：2026-09-18-Jamie-数学-完全平方公式 [错题 1：多项式相乘...]
         unique_title = f"{raw_filename} | {first_line}"
 
         questions.append({
@@ -125,7 +123,7 @@ def sync_to_notion():
                 "parent": {"database_id": DATABASE_ID},
                 "properties": {
                     "标题": {
-                        "title": [{"text": {"content": title[:200]}}]  # Notion 标题有字数限制，截取前200字
+                        "title": [{"text": {"content": title[:200]}}]
                     },
                     "Child": {
                         "select": {"name": data["Child"]} if data["Child"] else None
@@ -134,7 +132,7 @@ def sync_to_notion():
                         "select": {"name": data["Subject"]} if data["Subject"] else None
                     },
                     "ReviewDate": {
-                        "date": {"start": data["ReviewDate"]} if data["ReviewDate`"] else None
+                        "date": {"start": data["ReviewDate"]} if data["ReviewDate"] else None
                     },
                     "Reason": {
                         "rich_text": [{"text": {"content": data["Reason"][:2000]}}] if data["Reason"] else []
