@@ -1,259 +1,31 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jamie 的错题本</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 0 20px;
-            background-color: #f7f9fc;
-            color: #333;
-        }
-        .header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        h2.main-title {
-            color: #1f2937;
-            margin: 0;
-            font-size: 26px;
-            text-align: center;
-            flex-grow: 1;
-        }
-        .switch-link {
-            color: #4f46e5;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            background: #eef2ff;
-            padding: 6px 12px;
-            border-radius: 6px;
-            transition: background 0.2s;
-        }
-        .switch-link:hover {
-            background: #e0e7ff;
-        }
-        .subject-section {
-            margin-bottom: 30px;
-        }
-        .subject-title {
-            color: #2563eb;
-            font-size: 20px;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        /* 错题卡片样式 */
-        .error-card {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.05);
-            border: 1px solid #f3f4f6;
-        }
-        .card-header {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .badge-core {
-            background: #4f46e5;
-            color: #ffffff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .tag-keyword {
-            color: #1e40af;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        .card-content {
-            font-size: 16px;
-            color: #1f2937;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        .analysis-box {
-            background: #f8fafc;
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #3b82f6;
-        }
-        .reason-text {
-            color: #dc2626;
-            margin-bottom: 8px;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        .correct-text {
-            color: #16a34a;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            color: #6b7280;
-            border-top: 1px solid #f3f4f6;
-            padding-top: 10px;
-        }
-        .badge-type {
-            background: #eef2ff;
-            color: #4f46e5;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: 500;
-        }
-        .empty-tip {
-            text-align: center;
-            color: #6b7280;
-            padding: 40px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-    </style>
-</head>
-<body>
+${items.map(item => `  
+    <div class="card">  
+        <!-- 1. 顶部核心考点：绑定 Pitfall -->  
+        <div class="card-header-topic">  
+            <span class="topic-badge">📌 核心考点</span>  
+            <h3 class="topic-title">${item.Pitfall && item.Pitfall.trim() !== '' ? item.Pitfall : '综合应用与知识点'}</h3>  
+        </div>  
 
-    <div class="header-bar">
-        <!-- 占位保持标题居中 -->
-        <div style="width: 80px;"></div>
-        <h2 class="main-title" id="page-main-title">📚 Jamie 的错题本</h2>
-        <a href="coco.html" class="switch-link">切换到 coco ➔</a>
-    </div>
-
-    <div id="error-container">加载中...</div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            fetch('jamie-data.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('网络请求失败或文件未找到');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    renderData(data);
-                })
-                .catch(err => {
-                    console.error('加载数据失败:', err);
-                    document.getElementById('error-container').innerHTML = `
-                        <div class="empty-tip">加载数据失败，请检查 <code>jamie-data.json</code> 文件路径或网络。</div>
-                    `;
-                });
-        });
-
-        function renderData(data) {
-            const container = document.getElementById('error-container');
-            container.innerHTML = '';
-
-            const now = new Date();
-
-            // 1. 计算每一道题距离今天的天数
-            const processedData = data.map(item => {
-                let diffDays = 0;
-                if (item.ReviewDate) {
-                    const itemDate = new Date(item.ReviewDate);
-                    if (!isNaN(itemDate)) {
-                        diffDays = Math.floor((now - itemDate) / (1000 * 60 * 60 * 24));
-                    }
-                }
-                return { ...item, diffDays };
-            });
-
-            // 2. 筛选出所有大于 6 天的题目
-            const greaterThanSix = processedData.filter(item => item.diffDays > 6);
-
-            // 如果没有大于 6 天的题目
-            if (greaterThanSix.length === 0) {
-                container.innerHTML = '<div class="empty-tip">🎉 太棒了，暂无超过 6 天的历史错题需要复习！</div>';
-                return;
-            }
-
-            // 3. 找出所有满足条件的天数（去重并从小到大排序）
-            const allDays = [...new Set(greaterThanSix.map(item => item.diffDays))].sort((a, b) => a - b);
+        <!-- 2. 主体内容区：题目、错误原因、正确解析 -->  
+        <div class="card-body">  
+            <div class="question-text">  
+                ${(item.Title || item['标题']) && (item.Title || item['标题']).trim() !== '' ? (item.Title || item['标题']) : '无标题题目'}  
+            </div>  
             
-            // 获取其中最小的那一天（即距离今天最近的“最后一天”，比如第 7 天）
-            const targetDay = allDays[0];
+            <div class="analysis-box">  
+                <div class="error-reason">  
+                    ❌ <strong>错误原因：</strong> ${item.Error || item.ErrorCause || '无'}  
+                </div>  
+                <div class="correct-solution">  
+                    ✔️ <strong>正确解析：</strong> ${item.Analysis || '无'}  
+                </div>  
+            </div>  
+        </div>  
 
-            // 动态修改主标题，提示当前复习的是第几天前的题目
-            document.getElementById('page-main-title').innerText = `📚 Jamie 的错题本（错于 ${targetDay} 天前）`;
-
-            // 4. 只保留这一天的错题
-            const targetList = greaterThanSix.filter(item => item.diffDays === targetDay);
-
-            // 5. 按科目（Subject）进行分组
-            const groups = {};
-            targetList.forEach(item => {
-                const subject = item.Subject || '未分类';
-                if (!groups[subject]) {
-                    groups[subject] = [];
-                }
-                groups[subject].push(item);
-            });
-
-            // 6. 渲染成你原来精美的卡片样式
-            for (const [subject, items] of Object.entries(groups)) {
-                const sectionDiv = document.createElement('div');
-                sectionDiv.className = 'subject-section';
-                
-                sectionDiv.innerHTML = `<div class="subject-title">📖 ${subject} (${items.length} 题)</div>`;
-
-                items.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'error-card';
-
-                    // 兼容你数据中的字段名称
-                    const corePoint = item.CorePoint || item.corePoint || '核心考点';
-                    const keywords = item.Keywords || item.keywords || '';
-                    const titleText = item.Title || item.content || '无题目内容';
-                    const errorReason = item.ErrorReason || item.errorReason || '无';
-                    const correctParse = item.CorrectParse || item.correctParse || '无';
-                    const typeText = item.Type || item.type || '错题';
-                    const reviewDateText = item.ReviewDate || '';
-
-                    card.innerHTML = `
-                        <div class="card-header">
-                            <span class="badge-core">📌 核心考点</span>
-                            <span class="tag-keyword">${corePoint} ${keywords}</span>
-                        </div>
-                        <div class="card-content">
-                            ${titleText}
-                        </div>
-                        <div class="analysis-box">
-                            <div class="reason-text">❌ <strong>错误原因：</strong>${errorReason}</div>
-                            <div class="correct-text">✔️ <strong>正确解析：</strong>${correctParse}</div>
-                        </div>
-                        <div class="card-footer">
-                            <span class="badge-type">🏷️ 类型: ${typeText}</span>
-                            <span>⏰ 复习日: ${reviewDateText} (错于 ${item.diffDays} 天前)</span>
-                        </div>
-                    `;
-                    sectionDiv.appendChild(card);
-                });
-
-                container.appendChild(sectionDiv);
-            }
-        }
-    </script>
-</body>
-</html>
+        <!-- 3. 底部元数据：Knowledge 类型 与 Review Date 复习日 -->  
+        <div class="card-footer">  
+            <span class="card-knowledge">🏷️ 类型: ${item.Knowledge && item.Knowledge.trim() !== '' ? item.Knowledge : '未分类'}</span>  
+            <span>🕒 复习日：${item['Review Date'] || item.ReviewDate || '无'}</span>  
+        </div>  
+    </div>  
+`).join('')}
