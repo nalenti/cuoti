@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>错题本复习（仅显示最近的一天）</title>
+    <title>错题本复习</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -13,9 +13,28 @@
             background-color: #f7f9fc;
             color: #333;
         }
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
         h2 {
             color: #1f2937;
-            margin-bottom: 20px;
+            margin: 0;
+        }
+        .switch-link {
+            color: #4f46e5;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            background: #eef2ff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .switch-link:hover {
+            background: #e0e7ff;
         }
         .subject-group {
             background: #ffffff;
@@ -64,7 +83,12 @@
 </head>
 <body>
 
-    <h2 id="page-title">📖 错题本复习</h2>
+    <div class="header-bar">
+        <h2 id="page-title">📖 错题本复习</h2>
+        <!-- 切换到 coco 的链接，请根据你的实际文件名或路径修改 href -->
+        <a href="coco.html" class="switch-link">切换到 coco ➔</a>
+    </div>
+
     <div id="error-container">加载中...</div>
 
     <script>
@@ -114,19 +138,19 @@
                 return;
             }
 
-            // 3. 找出所有满足条件的天数（去重并排序）
+            // 3. 找出所有满足条件的天数（去重并从小到大排序）
             const allDays = [...new Set(greaterThanSix.map(item => item.diffDays))].sort((a, b) => a - b);
             
-            // 获取其中最小的那一天（即距离今天最近的一天，比如第 7 天、第 8 天等）
+            // 获取其中最小的那一天（即距离今天最近的“最后一天”，比如第 7 天、第 8 天等）
             const targetDay = allDays[0];
 
-            // 动态修改标题，提示当前显示的是第几天的数据
+            // 动态修改页面主标题，提示当前显示的是第几天的数据
             document.getElementById('page-title').innerText = `📖 错题本复习（错于 ${targetDay} 天前的题目）`;
 
             // 4. 只保留这一天的错题
             const targetList = greaterThanSix.filter(item => item.diffDays === targetDay);
 
-            // 5. 按科目分组
+            // 5. 按科目（Subject）进行正常分组
             const groups = {};
             targetList.forEach(item => {
                 const subject = item.Subject || '未分类';
@@ -136,7 +160,7 @@
                 groups[subject].push(item);
             });
 
-            // 6. 渲染到页面
+            // 6. 按照科目分组渲染到页面上
             for (const [subject, items] of Object.entries(groups)) {
                 const subjectDiv = document.createElement('div');
                 subjectDiv.className = 'subject-group';
