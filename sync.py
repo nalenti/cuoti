@@ -34,12 +34,31 @@ def extract_value(prop):
 
 def sync_notion_data():
     url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
-    response = requests.post(url, headers=headers)
-    if response.status_code != 200:
-        print(f"Error querying Notion: {response.text}")
-        return
+    
+    results = []
+    has_more = True
+    start_cursor = None
 
-    results = response.json().get("results", [])
+    print("正在从 Notion 循环拉取所有错题数据...")
+    
+    # 💡 核心修改：通过 while 循环进行分页拉取，突破 100 条限制
+    while has_more:
+        payload = {}
+        if start_cursor:
+            payload["start_cursor"] = start_cursor
+
+        response = requests.post(url, headers=headers, json=payload)
+        if response.status_code != 200:
+            print(f"Error querying Notion: {response.text}")
+            return
+
+        res_data = response.json()
+        results.extend(res_data.get("results", []))
+        
+        has_more = res_data.get("has_more", False)
+        start_cursor = res_data.get("next_cursor")
+
+    print(f"成功拉取到共计 {len(results)} 条记录，正在处理字段...")
     data_list = []
 
     for page in results:
@@ -54,17 +73,17 @@ def sync_notion_data():
         if not title_val:
             title_val = extract_value(props.get("标题") or props.get("Title") or props.get("Name"))
 
-        # 整合错误原因内容，确保前端模板读取 Reason / Error / ErrorCause 都能拿到值
+        # 整合错误原因内容
         error_content = extract_value(props.get("Error") or props.get("ErrorCause") or props.get("Reason"))
 
         item = {
             "Title": title_val,
             "Child": extract_value(props.get("Child")),
             "Subject": extract_value(props.get("Subject") or props.get("科目")),
-            "ReviewDate": extract_value(props.get("Review Date") or props.get("ReviewDate")), # 👈 完美兼容带空格的 Review Date
-            "Reason": error_content,      # 适配网页端可能读取 Reason
-            "Error": error_content,       # 适配网页端可能读取 Error
-            "ErrorCause": error_content,  # 适配网页端可能读取 ErrorCause
+            "ReviewDate": extract_value(props.get("Review Date") or props.get("ReviewDate")),
+            "Reason": error_content,
+            "Error": error_content,
+            "ErrorCause": error_content,
             "Knowledge": extract_value(props.get("Knowledge")),
             "Analysis": extract_value(props.get("Analysis")),
             "Pitfall": extract_value(props.get("Pitfall"))
@@ -73,7 +92,7 @@ def sync_notion_data():
 
     with open("jamie-data.json", "w", encoding="utf-8") as f:
         json.dump(data_list, f, ensure_ascii=False, indent=4)
-    print("Successfully updated jamie-data.json")
+    print(f"Successfully updated jamie-data.json (总计写入 {len(data_list)} 条数据)")
 
 if __name__ == "__main__":
     sync_notion_data()
