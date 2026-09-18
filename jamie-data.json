@@ -6,7 +6,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#英语翻译 #提建议句型 #宾语从句改疑问语序",
-        "Analysis": "① Why not go hiking with us this weekend?（或 Why don't you go hiking with us this weekend?）② Could you teach me how to use a 3D printer?"
+        "Analysis": "① Why not go hiking with us this weekend?（或 Why don't you go hiking with us this weekend?）② Could you teach me how to use a 3D printer?",
+        "Pitfall": "考点：① Why not do sth.? = Why don't you do sth.? 表示提建议，后接动词原形；② teach sb how to do sth. 教某人如何做某事，how to do 是「疑问词+不定式」结构，不能再改成疑问语序。"
     },
     {
         "Title": "（豆包记录·短语）next school play 是什么意思？",
@@ -15,7 +16,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#英语短语 #一词多义",
-        "Analysis": "next school play = 下一场校园戏剧/下一届校园演出。例句：Our next school play will be in December."
+        "Analysis": "next school play = 下一场校园戏剧/下一届校园演出。例句：Our next school play will be in December.",
+        "Pitfall": "记忆点：此处 play 是名词「戏剧、话剧」。school play 是固定搭配，指学校编排的舞台剧，国外中小学很常见。"
     },
     {
         "Title": "（豆包记录·词组辨析）听力里听到的词组：make mistakes 与 make sticks 分不清",
@@ -24,7 +26,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#英语听力 #词组辨析 #连读辨音",
-        "Analysis": "make mistakes = 犯错误（We all make mistakes.）；make sticks 字面义：制作木棍。"
+        "Analysis": "make mistakes = 犯错误（We all make mistakes.）；make sticks 字面义：制作木棍。",
+        "Pitfall": "辨音点：make mistakes /meɪk mɪˈsteɪks/ 在快速连读时，mɪˈsteɪks 容易被听成 stɪks。做题时用语法常识反推——make sticks 是「做木棍」，课本几乎不会考；make mistakes（犯错误）才是高频固定短语。"
     },
     {
         "Title": "（豆包记录·完形填空）语篇主题：学水彩画 → 暑假上烹饪课 → 报名校园话剧 → 感悟（第19~28题）",
@@ -33,7 +36,8 @@
         "ReviewDate": "",
         "Reason": "完形填空固定搭配：praise sb for sth / take sb to / fill…with…",
         "Knowledge": "#完形填空 #固定搭配 #时态判断 #形式主语",
-        "Analysis": "19. me｜20. techniques｜21. for｜22. took｜23. 不填（give sb sth）｜24. filling｜25. but｜26. was｜27. it｜28. lessons。"
+        "Analysis": "19. me｜20. techniques｜21. for｜22. took｜23. 不填（give sb sth）｜24. filling｜25. but｜26. was｜27. it｜28. lessons。",
+        "Pitfall": "高频短语与考点：① praise sb for sth 因某事表扬某人；② take sb to… 带某人去某地（暑假发生过 → 用过去式 took）；③ give sb sth 双宾语，不要再加介词；④ fill…with… 用……填满；⑤ a small but important role 一个虽小但重要的角色；⑥ 动名词作主语视为单数（Standing on the stage was…）；⑦ valuable lessons 宝贵的经验教训。"
     },
     {
         "Title": "（豆包记录·同义句转换）Mark was successful in solving the problem on his own.（改为同义句）Mark ___ ___ the problem on his own.",
@@ -42,7 +46,8 @@
         "ReviewDate": "",
         "Reason": "同义句转换：be successful in doing = succeed in doing，且要同步改时态",
         "Knowledge": "#同义句转换 #succeed in doing #时态一致",
-        "Analysis": "Mark succeeded in solving the problem on his own. 中文：马克独自成功解决了这个问题。"
+        "Analysis": "Mark succeeded in solving the problem on his own. 中文：马克独自成功解决了这个问题。",
+        "Pitfall": "考点：be successful in doing sth. = succeed in doing sth.（成功做某事）。原句 was 是过去式，succeed 要相应变成 succeeded；in 后面动词仍用 -ing。"
     },
     {
         "Title": "（豆包记录·单词）back 在 I put some glue on the back. 里是什么意思？",
@@ -51,7 +56,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#英语名词 #一词多义",
-        "Analysis": "back /bæk/ n. 背面。句意：我在（乐高作品的）背面涂上一些胶水。"
+        "Analysis": "back /bæk/ n. 背面。句意：我在（乐高作品的）背面涂上一些胶水。",
+        "Pitfall": "记忆点：back 是典型一词多义——名词「背面、后面」（on the back = 在背面）；副词「回来」（come back）；形容词「后面的」（back door）。本句是名词。"
     },
     {
         "Title": "（豆包记录·单词）after 在 after finishing my homework 里是什么意思？",
@@ -60,7 +66,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#英语介词 #非谓语动词",
-        "Analysis": "after /ˈɑːftə(r)/ prep. 在……之后。after doing homework 做完作业后；before going to school 上学之前。"
+        "Analysis": "after /ˈɑːftə(r)/ prep. 在……之后。after doing homework 做完作业后；before going to school 上学之前。",
+        "Pitfall": "记忆点：after 既可作介词也可作连词。作介词时后面接名词或动名词（after doing sth）；作连词时才接句子（after I did sth）。"
     },
     {
         "Title": "（豆包记录·短语）Use the proper tense. 是什么意思？",
@@ -69,7 +76,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#英语时态 #写作要求词",
-        "Analysis": "proper tense = 恰当的时态。反例（扣分）：When I felt sad, I don't want to talk.（时态混乱）"
+        "Analysis": "proper tense = 恰当的时态。反例（扣分）：When I felt sad, I don't want to talk.（时态混乱）",
+        "Pitfall": "记忆点：proper=恰当的，tense=时态。要求全文时态统一，不能一会儿过去时一会儿现在时。写日常发生的事推荐统一用一般现在时。"
     },
     {
         "Title": "（豆包记录·单词）element 是什么意思？（评价表：Cover the elements of problem, solution and feeling）",
@@ -78,7 +86,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#英语词汇 #作文评价表用词",
-        "Analysis": "element /ˈelɪmənt/ n. 要素；组成部分。例句：There are three elements in the story."
+        "Analysis": "element /ˈelɪmənt/ n. 要素；组成部分。例句：There are three elements in the story.",
+        "Pitfall": "记忆点：element 名词「要素、组成部分」，复数 elements。这篇作文的三个 elements 就是 problem / solution / feeling。"
     },
     {
         "Title": "（豆包记录·单词）solution 是什么意思？（作文评价表用词）",
@@ -87,7 +96,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#英语词汇 #作文评价表用词",
-        "Analysis": "solution /səˈluːʃn/ n. 解决办法；方案。例句：My solution is a mood light."
+        "Analysis": "solution /səˈluːʃn/ n. 解决办法；方案。例句：My solution is a mood light.",
+        "Pitfall": "记忆点：solution 是名词「解决办法、方案」，动词原形是 solve。写作题里 solution 对应「我设计的这盏灯」。"
     },
     {
         "Title": "（豆包记录·英语作文）以「设计一盏心情灯」为题写作文，按 Who / Problem / Solution / Body / Ending 填提纲",
@@ -96,7 +106,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#英语写作 #作文提纲 #要素完整",
-        "Analysis": "Who: I；Problem: When I feel angry or sad, I don't want to talk to my family.；Solution: I designed a mood light (a feeling light).；Body: My family can know my feelings by the colours of the light.；Ending: I love my mood light. It helps my family understand me better."
+        "Analysis": "Who: I；Problem: When I feel angry or sad, I don't want to talk to my family.；Solution: I designed a mood light (a feeling light).；Body: My family can know my feelings by the colours of the light.；Ending: I love my mood light. It helps my family understand me better.",
+        "Pitfall": "要点：这篇写作要求覆盖三个 elements——problem（难题）、solution（解决办法）、feeling（感受），且顺序必须是「问题 → 方案 → 感受」。"
     },
     {
         "Title": "（豆包记录·英语续写）One day, I played Lego after finishing my homework. I tried a few times. I thought, Why not put the Lego on the door with the glue? After ___,（续写，需包含 problem、solution、feeling 三要素）",
@@ -105,7 +116,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#英语写作 #problem/solution/feeling #一般过去时",
-        "Analysis": "范文：After I put some glue on the back, I stuck my Lego work onto the door. It looked beautiful! Mum saw it and smiled. I felt so happy with my new door decoration."
+        "Analysis": "范文：After I put some glue on the back, I stuck my Lego work onto the door. It looked beautiful! Mum saw it and smiled. I felt so happy with my new door decoration.",
+        "Pitfall": "要点：① 必须写全 problem（乐高放不稳）→ solution（用胶水粘门上）→ feeling（很开心）三要素；② 全文统一一般过去时；③ After 后面接从句或动名词短语。"
     },
     {
         "Title": "（豆包记录·语法填空）One day, I played Lego after ___ (finish) my homework. I ___ (offer/try) a few times.",
@@ -114,7 +126,8 @@
         "ReviewDate": "",
         "Reason": "介词后接动名词：after finishing 写成了 after finish",
         "Knowledge": "#介词后接动名词 #根据语境选词 #一般过去时",
-        "Analysis": "after finishing；tried（全文为一般过去时）。"
+        "Analysis": "after finishing；tried（全文为一般过去时）。",
+        "Pitfall": "考点：① after / before 作介词时，后面动词必须用 -ing 形式（after doing homework）；② 选词要结合语境——「试了好几次」是 try a few times，offer 意为「主动提供」，语义不通。"
     },
     {
         "Title": "（豆包记录·文言文·李广）《资治通鉴》选段：广为人廉，得赏赐辄分其麾下，饮食与士共之……及死，一军皆哭；百姓闻之，知与不知，无老壮皆为垂涕。",
@@ -123,7 +136,8 @@
         "ReviewDate": "",
         "Reason": "文言实词 + 人物形象题：辄 / 度(duó) / 乏绝 / 垂涕",
         "Knowledge": "#文言文阅读 #实词理解 #人物形象分析",
-        "Analysis": "重点句翻译：百姓闻之，知与不知，无老壮皆为垂涕 → 百姓听到这个消息，认识他的和不认识他的，无论年老还是年少，都为他流泪。"
+        "Analysis": "重点句翻译：百姓闻之，知与不知，无老壮皆为垂涕 → 百姓听到这个消息，认识他的和不认识他的，无论年老还是年少，都为他流泪。",
+        "Pitfall": "采分点：① 辄=就；② 麾下=部下；③ 度（duó）=估计、揣测；④ 乏绝=粮食水源匮乏断绝；⑤ 尝=曾经/吃；⑥ 无老壮=无论老少；⑦ 垂涕=流泪。人物形象：廉洁奉公、爱护士兵、体恤下属、武艺高强。"
     },
     {
         "Title": "（豆包记录·文言文）《资治通鉴》选段：布母弟丁公，亦为项羽将，逐窘帝彭城西……遂斩之，曰：使后为人臣无效丁公也。",
@@ -132,7 +146,8 @@
         "ReviewDate": "",
         "Reason": "文言实词采分点：逐窘 / 顾 / 厄 / 徇（巡行示众）",
         "Knowledge": "#文言文阅读 #实词理解 #人物评价",
-        "Analysis": "重点句翻译：丁公为项王臣不忠，使项王失天下者也 → 丁公作为项王的臣子却不忠诚，是致使项王失掉天下的人。全文：丁公曾在彭城西追击围困刘邦，刘邦一句「两贤岂相厄哉」让他撤兵；项羽灭亡后丁公来拜见，刘邦却将他巡行示众并斩杀，用以告诫后世臣子不可效仿。"
+        "Analysis": "重点句翻译：丁公为项王臣不忠，使项王失天下者也 → 丁公作为项王的臣子却不忠诚，是致使项王失掉天下的人。全文：丁公曾在彭城西追击围困刘邦，刘邦一句「两贤岂相厄哉」让他撤兵；项羽灭亡后丁公来拜见，刘邦却将他巡行示众并斩杀，用以告诫后世臣子不可效仿。",
+        "Pitfall": "采分点：① 逐窘=追击围困；② 顾=回头看；③ 厄=迫害；④ 引兵=率领军队；⑤ 谒见=拜见；⑥ 徇=巡行示众。核心问点是「刘邦为何杀曾有恩于自己的丁公」——为警示群臣要忠诚。"
     },
     {
         "Title": "（豆包记录·第5题）若 x(x−a)+b(x+a)=x²+5x−6，求 a(b−1)+b(a+1) 的值（ ）",
@@ -141,7 +156,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#多项式恒等 #系数相等 #整体代入",
-        "Analysis": "2×(−6)+5=−12+5=−7，选 B。"
+        "Analysis": "2×(−6)+5=−12+5=−7，选 B。",
+        "Pitfall": "坑点：左边展开得 x²+(b−a)x+ab，对应系数相等得 b−a=5、ab=−6；所求式先化简成 2ab+(b−a) 再整体代入，不必分别求 a、b。"
     },
     {
         "Title": "（豆包记录·第4题）若 (x+8)(x−4)=x²+mx+n，则（ ）",
@@ -150,7 +166,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式乘法 #待定系数",
-        "Analysis": "(x+8)(x−4)=x²+4x−32 → m=4，n=−32，选 B。"
+        "Analysis": "(x+8)(x−4)=x²+4x−32 → m=4，n=−32，选 B。",
+        "Pitfall": "坑点：先完整展开成标准形式 x²+4x−32，再与 x²+mx+n 逐项对照系数，注意常数项是 −32。"
     },
     {
         "Title": "（豆包记录·24题）新定义：若 aⁿ=b，则 log_a b=n。(1) 求 log₂4、log₂16、log₂64；(2) 写出三者关系；(3) 归纳一般结论；(4) 证明该结论",
@@ -159,7 +176,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#对数新定义 #同底数幂乘法 #规律归纳",
-        "Analysis": "(1) 2、4、6；(2) log₂4+log₂16=log₂64；(3) log_a M+log_a N=log_a(MN)；(4) 设 log_a M=m、log_a N=n，则 MN=a^m·a^n=a^(m+n)，故 log_a(MN)=m+n，等式成立。"
+        "Analysis": "(1) 2、4、6；(2) log₂4+log₂16=log₂64；(3) log_a M+log_a N=log_a(MN)；(4) 设 log_a M=m、log_a N=n，则 MN=a^m·a^n=a^(m+n)，故 log_a(MN)=m+n，等式成立。",
+        "Pitfall": "坑点：新定义题的通用做法是「用定义翻译」——把对数设成 m、n，转成 a^m=M、a^n=N，再用同底数幂乘法推出 m+n。"
     },
     {
         "Title": "（豆包记录·23题）(1) 比较 3⁴⁴、4³³、5²²；(2) 比较 81³¹、27⁴¹、9⁶¹；(3) 已知 a=2⁷、b=3⁵ 比较大小；(4) 比较 3¹²×5¹⁰ 与 3¹⁰×5¹²",
@@ -168,7 +186,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#幂的大小比较 #指数化同 #底数化同",
-        "Analysis": "(1) 化指数 11：81¹¹>64¹¹>25¹¹；(2) 化底数 3：3¹²⁴>3¹²³>3¹²²；(3) 128<243 → a<b；(4) 9×15¹⁰<25×15¹⁰。"
+        "Analysis": "(1) 化指数 11：81¹¹>64¹¹>25¹¹；(2) 化底数 3：3¹²⁴>3¹²³>3¹²²；(3) 128<243 → a<b；(4) 9×15¹⁰<25×15¹⁰。",
+        "Pitfall": "坑点：比较幂只有两条路——① 指数化成相同（取指数的最大公约数），比底数；② 底数化成相同，比指数。(4) 用中间量 15¹⁰ 作桥梁。"
     },
     {
         "Title": "（豆包记录·22题）正方形 A 边长 a、B 边长 b；图1阴影 (b−a)²=1，图2阴影 2ab=12。(1) 求 a²+b²；(2) (2a+b)(a+3b) 需几个 ab 长方形；(3) 求图3阴影面积",
@@ -177,7 +196,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#完全平方公式的几何意义 #图形面积 #代数式求值",
-        "Analysis": "(1) 1+12=13；(2) 展开 (2a+b)(a+3b)=2a²+7ab+3b²，需要 7 个；(3) (2a+b)²−3a²−2b²=a²−b²+4ab，由 a=2、b=3 得 4−9+24=19。"
+        "Analysis": "(1) 1+12=13；(2) 展开 (2a+b)(a+3b)=2a²+7ab+3b²，需要 7 个；(3) (2a+b)²−3a²−2b²=a²−b²+4ab，由 a=2、b=3 得 4−9+24=19。",
+        "Pitfall": "坑点：① a²+b²=(b−a)²+2ab；② 求 a、b 要联合 (b−a)²=1（b>a ⇒ b−a=1）与 ab=6 列方程 a²+a−6=0。"
     },
     {
         "Title": "（豆包记录·21题）观察 (x+1)(x²−x+1)=x³+1、(x+3)(x²−3x+9)=x³+27、(x+6)(x²−6x+36)=x³+216。(1) 填空；(2) 证明；(3) 化简 (x+y)(x²−xy+y²)−(x−2y)(x²+2xy+4y²)",
@@ -186,7 +206,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#立方和公式 #立方差公式 #公式结构识别",
-        "Analysis": "(1) 填 a²−ab+b²；(3) (x³+y³)−(x³−8y³)=9y³。"
+        "Analysis": "(1) 填 a²−ab+b²；(3) (x³+y³)−(x³−8y³)=9y³。",
+        "Pitfall": "坑点：见 (a+b)(a²−ab+b²)=a³+b³、(a−b)(a²+ab+b²)=a³−b³ 要条件反射。第 (3) 问第二个因式实为 (x−2y)(x²+2xy+(2y)²)=x³−8y³。"
     },
     {
         "Title": "（豆包记录·20题）将关于 x 的一次式 ax+b 与二次三项式 x²−2x+1 相乘，积中不含二次项，且一次项系数为 6，求 a、b",
@@ -195,7 +216,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式乘法 #不含某项 #待定系数",
-        "Analysis": "−2a+b=0 且 a−2b=6 → 由 b=2a 代入得 a−4a=6 → a=−2，b=−4。"
+        "Analysis": "−2a+b=0 且 a−2b=6 → 由 b=2a 代入得 a−4a=6 → a=−2，b=−4。",
+        "Pitfall": "坑点：展开后必须先按 x 的降幂整理成 ax³+(−2a+b)x²+(a−2b)x+b，再逐条对照条件列方程。"
     },
     {
         "Title": "（豆包记录·19题）A=2x²+3xy+2x−1，B=x²+xy+3x−2。(1) 化简 A−2B，并求 x=y=2 时的值；(2) 若 A−2B 的值与 x 无关，求 y",
@@ -204,7 +226,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式运算 #与字母取值无关 #系数为0",
-        "Analysis": "A−2B=xy−4x+3；x=y=2 时 =4−8+3=−1；(2) y−4=0 → y=4。"
+        "Analysis": "A−2B=xy−4x+3；x=y=2 时 =4−8+3=−1；(2) y−4=0 → y=4。",
+        "Pitfall": "坑点：① A−2B 要整体减，−2(x²+xy+3x−2) 每一项都变号；② 化简后按 x 整理成 (y−4)x+3，令 x 的系数为 0。"
     },
     {
         "Title": "（豆包记录·18题）已知 A+B=2C，A=x²−3xy+2y²，C=x²+½xy−2y²。(1) 求 B；(2) 若 (x+2)²+|y−1|=0，求 B 的值",
@@ -213,7 +236,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式运算 #非负性 #整体代入",
-        "Analysis": "B=2C−A=2x²+xy−4y²−x²+3xy−2y²=x²+4xy−6y²；由 x=−2、y=1 得 B=4−8−6=−10。"
+        "Analysis": "B=2C−A=2x²+xy−4y²−x²+3xy−2y²=x²+4xy−6y²；由 x=−2、y=1 得 B=4−8−6=−10。",
+        "Pitfall": "坑点：① 由 A+B=2C 得 B=2C−A，减 A 时每一项都要变号；② 几个非负项相加等于 0 ⇒ 每一项都为 0。"
     },
     {
         "Title": "（豆包记录·17题）(½x+y)(½x−y)−(2x−y)(x+2y)+(x−3y)²，其中 x=−⅔，y=−1",
@@ -222,7 +246,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式化简求值 #乘法公式 #去括号变号",
-        "Analysis": "化简得 −¾x²−9xy+10y²；代入 x=−⅔,y=−1：−⅓−6+10=11/3。"
+        "Analysis": "化简得 −¾x²−9xy+10y²；代入 x=−⅔,y=−1：−⅓−6+10=11/3。",
+        "Pitfall": "坑点：三个乘积分别展开、各自加括号再合并，减号要整体变号；代入分数时逐项写清，不要心算跳步。"
     },
     {
         "Title": "（豆包记录·16(4)）(a+2b)(a−2b)−2(3a+b)²",
@@ -231,7 +256,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#平方差公式 #完全平方公式 #去括号变号",
-        "Analysis": "a²−4b²−2(9a²+6ab+b²)=a²−4b²−18a²−12ab−2b²=−17a²−12ab−6b²。"
+        "Analysis": "a²−4b²−2(9a²+6ab+b²)=a²−4b²−18a²−12ab−2b²=−17a²−12ab−6b²。",
+        "Pitfall": "坑点：① (a+2b)(a−2b)=a²−4b²；② (3a+b)²=9a²+6ab+b²，中间项 6ab 最容易漏；③ 系数 −2 要乘遍括号内三项。"
     },
     {
         "Title": "（豆包记录·16(3)）(−3x)²·x²+(−x)³·x+(−x)⁴",
@@ -240,7 +266,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#幂的运算 #合并同类项",
-        "Analysis": "9x⁴−x⁴+x⁴=9x⁴。"
+        "Analysis": "9x⁴−x⁴+x⁴=9x⁴。",
+        "Pitfall": "坑点：逐项先定符号再算指数。9x²·x²=9x⁴；(−x)³·x=−x³·x=−x⁴；(−x)⁴=x⁴。三项是同底数幂、可直接合并。"
     },
     {
         "Title": "（豆包记录·16(2)）9x²y²·(−⅓x²y)²+(−x²y)²·xy²",
@@ -249,7 +276,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #单项式乘法",
-        "Analysis": "9x²y²·⅑x⁴y²+x⁴y²·xy²=x⁶y⁴+x⁵y⁴。"
+        "Analysis": "9x²y²·⅑x⁴y²+x⁴y²·xy²=x⁶y⁴+x⁵y⁴。",
+        "Pitfall": "坑点：先各自算乘方——(−⅓x²y)²=⅑x⁴y²、(−x²y)²=x⁴y²，再分别与前面的单项式相乘，最后合并。注意 (−⅓)² 是正数。"
     },
     {
         "Title": "（豆包记录·16(1)）5x²+4−3x²−5x−4+6x",
@@ -258,7 +286,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#合并同类项",
-        "Analysis": "5x²−3x²−5x+6x+4−4=2x²+x。"
+        "Analysis": "5x²−3x²−5x+6x+4−4=2x²+x。",
+        "Pitfall": "坑点：先把同类项拉到一起再算：5x²−3x²、−5x+6x、4−4。常数项 4−4 直接抵消为 0。"
     },
     {
         "Title": "（豆包记录·15题）已知 m²+m−1=0，则 m³+2m²+2017=__",
@@ -267,7 +296,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整体代入 #降次求值",
-        "Analysis": "m²+m=1 → m³+2m²+2017=m(m²+m)+m²+2017=m+m²+2017=1+2017=2018。"
+        "Analysis": "m²+m=1 → m³+2m²+2017=m(m²+m)+m²+2017=m+m²+2017=1+2017=2018。",
+        "Pitfall": "坑点：m³ 拆成 m·m²，凑出 m(m²+m)+m²；由条件得 m²+m=1，两次整体代入即可。"
     },
     {
         "Title": "（豆包记录·填空14）若 2ᵐ=3，2ⁿ=5，则 2^(m+2n)=__",
@@ -276,7 +306,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#同底数幂乘法 #幂的乘方 #整体代入",
-        "Analysis": "2^(m+2n)=2ᵐ·(2ⁿ)²=3×5²=3×25=75。"
+        "Analysis": "2^(m+2n)=2ᵐ·(2ⁿ)²=3×5²=3×25=75。",
+        "Pitfall": "坑点：指数是加法就拆成同底数幂相乘，倍数指数用幂的乘方（2^(2n)=(2ⁿ)²）。"
     },
     {
         "Title": "（豆包记录·填空13）A=2x²+4y²−3xy−y+6，B=x²−3xy+2y²+2x+3，比较 A 与 B 的大小",
@@ -285,7 +316,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式比较大小 #配方法判断符号",
-        "Analysis": "A−B=x²+2y²−y−2x+3=(x−1)²+2y²−y+2>0，所以 A>B。"
+        "Analysis": "A−B=x²+2y²−y−2x+3=(x−1)²+2y²−y+2>0，所以 A>B。",
+        "Pitfall": "坑点：比较两个整式大小用「作差法」——A−B 化简后配方，判断正负即可；不要试图分别求两个式子的值。"
     },
     {
         "Title": "（豆包记录·填空12）写出一个整式，满足：①只含字母 a；②不含常数项；③是三次二项式",
@@ -294,7 +326,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#列整式 #三次二项式",
-        "Analysis": "示例：2a³+3a（答案不唯一）。"
+        "Analysis": "示例：2a³+3a（答案不唯一）。",
+        "Pitfall": "坑点：只含字母 a ⇒ 不能出现 b、x 等其他字母；不含常数项 ⇒ 不能有纯数字项；三次二项式 ⇒ 最高次项的指数是 3，且整式一共两个项。"
     },
     {
         "Title": "（豆包记录·填空11）若关于 x 的整式 (m+4)x^|m|x² 是四次二项式，则 m=__",
@@ -303,7 +336,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#多项式的次数 #四项式的条件",
-        "Analysis": "|m|=2 且 m+4≠0（m=−2 时系数为 2≠0，也成立）；结合四次二项式通常取 m=2。"
+        "Analysis": "|m|=2 且 m+4≠0（m=−2 时系数为 2≠0，也成立）；结合四次二项式通常取 m=2。",
+        "Pitfall": "坑点：① 次数：|m|+2=4 → |m|=2；② 二项：x² 的系数不能为 0，即 m+4≠0。两个条件一起才能定出 m。"
     },
     {
         "Title": "（豆包记录·填空10）若 2x^(m+1)y² 与 3x³yⁿ 的和是单项式，则 mⁿ=__",
@@ -312,7 +346,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#和是单项式 #同类项 #指数幂",
-        "Analysis": "m=2，n=2 → mⁿ=2²=4。"
+        "Analysis": "m=2，n=2 → mⁿ=2²=4。",
+        "Pitfall": "坑点：「两个单项式的和仍是单项式」⇔ 两者是同类项 ⇒ 对应字母指数相等：m+1=3、n=2。"
     },
     {
         "Title": "（豆包记录·填空9）关于 x 的整式 2x²−3x+k−kx²+4kx−4 不含一次项，则 k=__，常数项=__",
@@ -321,7 +356,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#不含某项 #系数为0 #常数项",
-        "Analysis": "−3+4k=0 → k=3/4；常数项为 −4。"
+        "Analysis": "−3+4k=0 → k=3/4；常数项为 −4。",
+        "Pitfall": "坑点：不含一次项 ⇔ 一次项系数为 0。另外常数项要把所有不含字母的项合起来（k−4 中的 k 已由条件求出）。"
     },
     {
         "Title": "（豆包记录·填空8）若 −2x^(m+2)y⁴ 与 3x⁴yⁿ 是同类项，则 nᵐ=__",
@@ -330,7 +366,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#同类项 #指数幂求值",
-        "Analysis": "m+2=4 → m=2；n=4 → nᵐ=4²=16。"
+        "Analysis": "m+2=4 → m=2；n=4 → nᵐ=4²=16。",
+        "Pitfall": "坑点：先由同类项求出 m、n，再代入 nᵐ。注意最后一步是 n 的 m 次方（4²），不是 4×2。"
     },
     {
         "Title": "（豆包记录·填空7）已知 a−3b=1，则 2−2a+6b=__",
@@ -339,7 +376,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整体代入 #代数式变形",
-        "Analysis": "2−2(a−3b)=2−2×1=0。"
+        "Analysis": "2−2(a−3b)=2−2×1=0。",
+        "Pitfall": "坑点：先把目标式凑成已知式的形式：2−2a+6b=2−2(a−3b)，直接把 a−3b=1 整体代入。"
     },
     {
         "Title": "（豆包记录·选择题6）(2/3)²⁰⁰⁵·(−3/2)²⁰⁰⁶ =（ ）",
@@ -348,7 +386,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方逆用 #互为倒数底数",
-        "Analysis": "=(−1)×(−3/2)=3/2，选 C。"
+        "Analysis": "=(−1)×(−3/2)=3/2，选 C。",
+        "Pitfall": "坑点：(2/3)²⁰⁰⁵×(−3/2)²⁰⁰⁵=[(2/3)×(−3/2)]²⁰⁰⁵=(−1)²⁰⁰⁵=−1，再乘剩下的 (−3/2)。奇数次的 −1 仍是 −1。"
     },
     {
         "Title": "（豆包记录·选择题5）(−x²+5xy−½y²)−(−½x²+4xy−³⁄₂y²)=−½x²+?+y²，被墨水遮住的是（ ）",
@@ -357,7 +396,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#去括号 #合并同类项",
-        "Analysis": "展开得 −½x²+xy+y²，被遮住的是 +xy，选 A。"
+        "Analysis": "展开得 −½x²+xy+y²，被遮住的是 +xy，选 A。",
+        "Pitfall": "坑点：括号前是负号，括号里每一项都要变号。可反过来用结果减已知部分来验证遮住的项。"
     },
     {
         "Title": "（豆包记录·选择题4）当 x=3 时 px³+qx+1=888，则当 x=−3 时 px³+qx+1 的值是（ ）",
@@ -366,7 +406,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#奇次代数式的对称代换 #整体代入",
-        "Analysis": "27p+3q=887 → x=−3 时 = −(27p+3q)+1 = −887+1 = −886，选 C。"
+        "Analysis": "27p+3q=887 → x=−3 时 = −(27p+3q)+1 = −887+1 = −886，选 C。",
+        "Pitfall": "坑点：奇次项组 px³+qx，x→−x 时结果变为相反数。先由 x=3 得 27p+3q=887，再用它直接推出 x=−3 的值。"
     },
     {
         "Title": "（豆包记录·选择题3）下列说法正确的是（ ）",
@@ -375,7 +416,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#单项式的概念 #系数与次数 #同类项",
-        "Analysis": "选 A。"
+        "Analysis": "选 A。",
+        "Pitfall": "坑点：① 一次项系数要连符号一起读（2x²−3x+1 的一次项系数是 −3，不是 3）；② −πx²y 的系数是 −π、次数是 3；③ 单独一个数字也是单项式。"
     },
     {
         "Title": "（豆包记录·选择题2）下列各组单项式是同类项的是（ ）",
@@ -384,7 +426,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#同类项 #同类项判定",
-        "Analysis": "选 C（x²y²z 与 y²z²x² 对应字母的指数完全相同）。"
+        "Analysis": "选 C（x²y²z 与 y²z²x² 对应字母的指数完全相同）。",
+        "Pitfall": "坑点：把字母顺序调换（如 6a²b 与 −3b²a）不影响同类项判定，但指数不同就一定不是同类项。逐项核对每个字母的指数。"
     },
     {
         "Title": "（豆包记录·选择题1）单项式 −x²y/3 的系数是（ ）",
@@ -393,7 +436,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#单项式的系数 #系数含分母与负号",
-        "Analysis": "系数为 −1/3，选 A。"
+        "Analysis": "系数为 −1/3，选 A。",
+        "Pitfall": "坑点：系数 = 数字因数（含负号、含分母），不是只看字母前面那个整数。−x²y/3 的系数是 −1/3，不是 −1。"
     },
     {
         "Title": "（P36 8）计算：(1+1/2)(1+1/2²)(1+1/2⁴)(1+1/2⁸)+1/2¹⁵",
@@ -402,7 +446,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#平方差公式连用 #指数运算",
-        "Analysis": "原式=2×(1−1/2¹⁶)+1/2¹⁵=2−1/2¹⁵+1/2¹⁵=2。"
+        "Analysis": "原式=2×(1−1/2¹⁶)+1/2¹⁵=2−1/2¹⁵+1/2¹⁵=2。",
+        "Pitfall": "坑点：构造平方差需在前面乘 (1−1/2)，为保持等式平衡整体要乘 2；化简时 2×(1/2¹⁶)=(1/2¹⁵)，指数相减不是相乘。"
     },
     {
         "Title": "（P35 小试牛刀2）(2a−3b)(2a+3b)−(−2a)·5b",
@@ -411,7 +456,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#平方差公式 #单项式乘法",
-        "Analysis": "4a²−9b²+10ab（或写 4a²+10ab−9b²）。"
+        "Analysis": "4a²−9b²+10ab（或写 4a²+10ab−9b²）。",
+        "Pitfall": "坑点：注意后项的负号——−(−2a)=+2a，再乘 5b 得 +10ab；前项平方差是 4a²−9b²，两项不是同类项，不能合并。"
     },
     {
         "Title": "（P34 一、9）(−2a−3b)( )=9b²−4a²",
@@ -420,7 +466,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#平方差公式 #逆向填空",
-        "Analysis": "填 2a−3b。"
+        "Analysis": "填 2a−3b。",
+        "Pitfall": "坑点：先看'谁相同、谁相反'——已知因式是 −2a−3b，要配出 (3b+2a)(3b−2a) 的另一半，答案是 2a−3b。验证：(−2a−3b)(2a−3b)=(−3b−2a)(−3b+2a)=(−3b)²−(2a)²=9b²−4a²。"
     },
     {
         "Title": "（P33 4）关于 x,y 的多项式 mx²y³+2xy²+3x−5xy²+4nxy²−5y 合并后不含二次项和三次项，求 m²n 的值",
@@ -429,7 +476,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#不含某项 #待定系数",
-        "Analysis": "4n−3=0 → n=3/4；若题干另有条件确定 m，再代入求 m²n。"
+        "Analysis": "4n−3=0 → n=3/4；若题干另有条件确定 m，再代入求 m²n。",
+        "Pitfall": "坑点：按次数分组再令对应系数为 0。本题只给出三次项可消除，m 的取值需回看原题印刷（是否为 mx²y³ 或 mx²y）。"
     },
     {
         "Title": "（P33 3）已知 ax^(x+4)b^(y−1) 与 a²b^(3−x) 是同类项，求 5xy²−2x²y+3xy²−4xy²+2x²y 的值",
@@ -438,7 +486,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#同类项 #合并同类项 #代入求值",
-        "Analysis": "x=−2，y=6；原式化简为 4xy²=4×(−2)×6²=−288。"
+        "Analysis": "x=−2，y=6；原式化简为 4xy²=4×(−2)×6²=−288。",
+        "Pitfall": "坑点：同类项要求对应字母指数相等：a 的指数 x+4=2 → x=−2；再把 x 代进 y−1=3−x 求 y。"
     },
     {
         "Title": "（P33 2）计算：(2.5×10⁴)×(8×10³)",
@@ -447,7 +496,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#科学记数法 #单项式乘法",
-        "Analysis": "=20×10⁷=2×10⁸。"
+        "Analysis": "=20×10⁷=2×10⁸。",
+        "Pitfall": "坑点：系数算出来是 20（≥10）时，要再化成 2×10 的形式，指数进一位变成 10⁸。"
     },
     {
         "Title": "（P32 7）解方程：(2x+3)(x−4)−(x+2)(x−3)=x²+6",
@@ -456,7 +506,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式乘法 #解方程 #去括号变号",
-        "Analysis": "−4x=12 → x=−3。"
+        "Analysis": "−4x=12 → x=−3。",
+        "Pitfall": "坑点：方程两边先各自展开，相减的括号整体变号：2x²−5x−12−x²+x+6=x²+6，整理得 −4x−6=6。"
     },
     {
         "Title": "（P32 6）若 (x²+mx+n)(x²−3x+1) 的展开式中不含 x² 和 x³ 项，求 m、n",
@@ -465,7 +516,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式乘法 #不含某项",
-        "Analysis": "−3+m=0 → m=3；1−9+n=0 → n=8。"
+        "Analysis": "−3+m=0 → m=3；1−9+n=0 → n=8。",
+        "Pitfall": "坑点：x³ 项只来自 x²·(−3x)+mx·x²=(−3+m)x³；x² 项来自 x²·1+mx·(−3x)+n·x²=(1−3m+n)x²。分别令系数为 0。"
     },
     {
         "Title": "（P32 3(2)）求 (b−a)(−a−b)+(−a−b)²−a(2a+b) 的值（a=1/2，b=−12）",
@@ -474,7 +526,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式化简 #代入求值",
-        "Analysis": "化简得 ab=1/2×(−12)=−6。"
+        "Analysis": "化简得 ab=1/2×(−12)=−6。",
+        "Pitfall": "坑点：(b−a)(−a−b)=a²−b²，(−a−b)²=a²+2ab+b²，−a(2a+b)=−2a²−ab，合并后只剩 ab。"
     },
     {
         "Title": "（P32 3(1)）已知 (ax−3)(2x+4)−x²−b 化简后不含 x² 项和常数项，求 a、b",
@@ -483,7 +536,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#不含某项 #待定系数",
-        "Analysis": "2a−1=0 → a=1/2；−12−b=0 → b=−12。"
+        "Analysis": "2a−1=0 → a=1/2；−12−b=0 → b=−12。",
+        "Pitfall": "坑点：'不含某项' 就是该项系数为 0，分别对 x² 项与常数项列两个方程即可。"
     },
     {
         "Title": "（P31 2）化简求值：(x−1)(x²−3x+2)−x(x−1)(x−3)，其中 x=1",
@@ -492,7 +546,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#提公因式化简 #代入求值",
-        "Analysis": "化简得 2x−2；x=1 时原式=0。"
+        "Analysis": "化简得 2x−2；x=1 时原式=0。",
+        "Pitfall": "坑点：两项都含 (x−1)，提出来 → (x−1)[(x²−3x+2)−x(x−3)]=(x−1)·2，比硬展开省一半计算。"
     },
     {
         "Title": "（P31 1(6)）计算：(y−2)(y²+2y+4)−(y²+1)(y−1)",
@@ -501,7 +556,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#立方差公式 #去括号变号",
-        "Analysis": "(y³−8)−(y³−y²+y−1)=y²−y−7。"
+        "Analysis": "(y³−8)−(y³−y²+y−1)=y²−y−7。",
+        "Pitfall": "坑点：前半部分是立方差公式 (a−b)(a²+ab+b²)=a³−b³，直接得 y³−8；后半部分要整体变号。"
     },
     {
         "Title": "（P31 1(3)）计算：(y+2)(y−2)−(y−1)(y+5)",
@@ -510,7 +566,8 @@
         "ReviewDate": "",
         "Reason": "全库最高频失分模式：平方差后接减号，去括号忘记整体变号",
         "Knowledge": "#整式乘法 #去括号变号",
-        "Analysis": "y²−4−y²−4y+5=−4y+1。"
+        "Analysis": "y²−4−y²−4y+5=−4y+1。",
+        "Pitfall": "坑点：'前半部分 − 后半部分'时，务必给后半部分整体加括号再变号：−(y²+4y−5)=−y²−4y+5。"
     },
     {
         "Title": "（P31 1(2)）计算：(a+b)(3a−2b)−b(a−b)",
@@ -519,7 +576,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式乘法 #合并同类项",
-        "Analysis": "3a²+ab−2b²−ab+b²=3a²−b²。"
+        "Analysis": "3a²+ab−2b²−ab+b²=3a²−b²。",
+        "Pitfall": "坑点：展开后先各自成括号再合并：(3a²+ab−2b²)+(−ab+b²)，ab 项正好抵消。"
     },
     {
         "Title": "（P30 云阶梯2）已知 m²+m=1，求 m³+2m²+5 的值",
@@ -528,7 +586,8 @@
         "ReviewDate": "",
         "Reason": "整题空白的能力盲区：整体代入 + 降次，不需要求出 m",
         "Knowledge": "#整体代入 #降次",
-        "Analysis": "m(m²+m)+m²+5=m·1+m²+5=(m²+m)+5=1+5=6。"
+        "Analysis": "m(m²+m)+m²+5=m·1+m²+5=(m²+m)+5=1+5=6。",
+        "Pitfall": "坑点：不需要求出 m 的值。把 m³+2m² 拆成 m(m²+m)+m²，代入 m²+m=1 逐步降次。"
     },
     {
         "Title": "（P30 复习巩固8）计算：(−1/2 b)·(a²−2ab+b²)·(−4a)",
@@ -537,7 +596,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#单项式乘多项式 #系数运算",
-        "Analysis": "2ab·(a²−2ab+b²)=2a³b−4a²b²+2ab³。"
+        "Analysis": "2ab·(a²−2ab+b²)=2a³b−4a²b²+2ab³。",
+        "Pitfall": "坑点：先把两个单项式相乘 (−1/2 b)×(−4a)=2ab（负负得正），再用分配律乘遍括号内三项。"
     },
     {
         "Title": "（P29 复习巩固1）计算：(x−y)²·(y−x)³",
@@ -546,7 +606,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#相反数底数换底",
-        "Analysis": "(y−x)²·(y−x)³=(y−x)⁵，也可写成 −(x−y)⁵。"
+        "Analysis": "(y−x)²·(y−x)³=(y−x)⁵，也可写成 −(x−y)⁵。",
+        "Pitfall": "坑点：(x−y)²=(y−x)²（偶次可换底）；(y−x)³=(y−x)²·(y−x)，合并后底数统一为 (y−x)。"
     },
     {
         "Title": "（P29 四(1)）先化简再求值：3(x²)⁴·(x³)³−x·(−x⁴)⁴+(−2x⁴)²·(−x)³·(x²)³，其中 x=−1",
@@ -555,7 +616,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#幂的乘方 #积的乘方 #代入求值",
-        "Analysis": "化简得 −2x¹⁷，代入 x=−1 得 2。"
+        "Analysis": "化简得 −2x¹⁷，代入 x=−1 得 2。",
+        "Pitfall": "坑点：负数的奇次幂是负数：(−1)¹⁷=−1；再乘前面的系数 −2 得 (−2)×(−1)=2。"
     },
     {
         "Title": "（P29 三、7）计算：5a³b·(−3b)²+(−6ab)²·(−ab)−ab³·(−4a)²",
@@ -564,7 +626,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #合并同类项 #系数运算",
-        "Analysis": "45a³b³−36a³b³−16a³b³=−7a³b³。"
+        "Analysis": "45a³b³−36a³b³−16a³b³=−7a³b³。",
+        "Pitfall": "坑点：逐项算透再合并——第一项 5a³b·9b²=45a³b³，第二项 36a²b²·(−ab)=−36a³b³，第三项 −ab³·16a²=−16a³b³。"
     },
     {
         "Title": "（P29 三、6）计算：(2x²y)·(3xy²)−4xy·(xy)²",
@@ -573,7 +636,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #合并同类项",
-        "Analysis": "6x³y³−4x³y³=2x³y³。"
+        "Analysis": "6x³y³−4x³y³=2x³y³。",
+        "Pitfall": "坑点：(xy)²=x²y²，乘上前面的 4xy 得 4x³y³，与第一项是同类项。"
     },
     {
         "Title": "（P29 三、4）计算：7a·(−ab)²·(−a²b)",
@@ -582,7 +646,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#幂的运算 #单项式乘法",
-        "Analysis": "7a·a²b²·(−a²b)=−7a⁵b³。"
+        "Analysis": "7a·a²b²·(−a²b)=−7a⁵b³。",
+        "Pitfall": "坑点：(−ab)² 先展开成 a²b²（负号消失），再算 a¹·a²·a²=a⁵、b¹·b²·b¹=b⁴。"
     },
     {
         "Title": "（P28 三、2）计算：−4x·(y−x)/2",
@@ -591,7 +656,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#单项式乘多项式 #约分",
-        "Analysis": "−2xy+2x²（即 2x²−2xy）。"
+        "Analysis": "−2xy+2x²（即 2x²−2xy）。",
+        "Pitfall": "坑点：−4x 与分母 2 先约分得 −2x，再乘括号内每一项：−2x·(y−x)=−2xy+2x²。"
     },
     {
         "Title": "（P28 二）计算：(2.5×10⁴)×(1.6×10³)",
@@ -600,7 +666,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#科学记数法 #单项式乘法",
-        "Analysis": "(2.5×1.6)×(10⁴×10³)=4×10⁷。"
+        "Analysis": "(2.5×1.6)×(10⁴×10³)=4×10⁷。",
+        "Pitfall": "坑点：科学记数法相乘 = 系数相乘 + 10 的指数相加，最后把结果再规范成 4×10⁷ 的形式。"
     },
     {
         "Title": "（P26 云阶梯4(2)）简便计算：[(−1又4/5)⁵]⁴×(4/5)²⁰⁰⁹",
@@ -609,7 +676,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #带分数化假分数",
-        "Analysis": "统一成同一个分数的幂后约分，剩下 (4/5)¹⁹⁸⁹（请对照原卷题干核对分母，本题待核对）。"
+        "Analysis": "统一成同一个分数的幂后约分，剩下 (4/5)¹⁹⁸⁹（请对照原卷题干核对分母，本题待核对）。",
+        "Pitfall": "坑点：先把带分数 −1又4/5 化成假分数，再按'幂的乘方指数相乘'得 20；拆分 2009=20+1989 后配对约分。"
     },
     {
         "Title": "（P26 云阶梯2）若 (2⁴×2^(5n))³=(2³×5^(n+2))⁴，求 n",
@@ -618,7 +686,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#幂的运算 #指数对比",
-        "Analysis": "6n=4n+8 → 2n=8 → n=4。"
+        "Analysis": "6n=4n+8 → 2n=8 → n=4。",
+        "Pitfall": "坑点：先化左边 =(2⁴×5^(2n))³=2¹²×5^(6n)，右边 =2¹²×5^(4n+8)，2 的指数相同，只需比较 5 的指数。"
     },
     {
         "Title": "（P26 云阶梯1）已知 (16a²)³·(1/8)⁴=9，求 a¹² 的值",
@@ -627,7 +696,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #幂的乘方 #开方思想",
-        "Analysis": "a⁶=9 → a¹²=(a⁶)²=9²=81。"
+        "Analysis": "a⁶=9 → a¹²=(a⁶)²=9²=81。",
+        "Pitfall": "坑点：(1/8)⁴=(2⁻³)⁴=2⁻¹²，与 2¹² 恰好抵消；由 a⁶=9 求 a¹²，两边平方即可。"
     },
     {
         "Title": "（P26 25）计算：(x^(n−1))²·(−x³)·(−xⁿ)",
@@ -636,7 +706,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #负号处理",
-        "Analysis": "x^(2n−2)·x^(3+n)=x^(3n+1)。"
+        "Analysis": "x^(2n−2)·x^(3+n)=x^(3n+1)。",
+        "Pitfall": "坑点：负号先归拢（负负得正），再统一用同底数幂乘法加指数。"
     },
     {
         "Title": "（P26 24）计算：(aⁿ·b^(n+1))³·(ab)ⁿ",
@@ -645,7 +716,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #字母指数运算",
-        "Analysis": "a^(3n+n)·b^(3n+3+n)=a^(4n)b^(4n+3)。"
+        "Analysis": "a^(3n+n)·b^(3n+3+n)=a^(4n)b^(4n+3)。",
+        "Pitfall": "坑点：先分别展开：(aⁿb^(n+1))³=a^(3n)b^(3n+3)，(ab)ⁿ=aⁿbⁿ，再按 a、b 分别加指数。"
     },
     {
         "Title": "（P26 19）计算：(−2a²b)²·(−2a³b)³",
@@ -654,7 +726,8 @@
         "ReviewDate": "",
         "Reason": "第一大易错知识点「积的乘方」：字母指数 4+9 算成了 10",
         "Knowledge": "#积的乘方 #同底数幂乘法",
-        "Analysis": "4a⁴b²·(−8a⁹b³)=−32a¹³b⁵。"
+        "Analysis": "4a⁴b²·(−8a⁹b³)=−32a¹³b⁵。",
+        "Pitfall": "坑点：分开算再合并：(−2a²b)²=4a⁴b²，(−2a³b)³=−8a⁹b³，字母指数 4+9=13、2+3=5。"
     },
     {
         "Title": "（P26 18）计算：(−2x³)³·((1/2)x²)²",
@@ -663,7 +736,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #系数与指数",
-        "Analysis": "=−8x⁹·(1/4)x⁴=−2x¹³。"
+        "Analysis": "=−8x⁹·(1/4)x⁴=−2x¹³。",
+        "Pitfall": "坑点：系数与字母分开处理：(−2)³=−8，(1/2)²=1/4，相乘得 −2；字母部分 x⁹·x⁴=x¹³。"
     },
     {
         "Title": "（P25 一、13）4⁵×8¹⁰=__（用幂的形式表示）",
@@ -672,7 +746,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#幂的乘方 #统一底数",
-        "Analysis": "4⁵×8¹⁰=(2²)⁵×(2³)¹⁰=2¹⁰×2³⁰=2⁴⁰。"
+        "Analysis": "4⁵×8¹⁰=(2²)⁵×(2³)¹⁰=2¹⁰×2³⁰=2⁴⁰。",
+        "Pitfall": "坑点：底数不同先统一（4、8、16 都化到 2 的幂），再用幂的乘方与同底数幂乘法。"
     },
     {
         "Title": "（P25 一、10）计算：(−1/3)²⁰¹⁴×(−3²⁰¹⁵)",
@@ -681,7 +756,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #指数拆分",
-        "Analysis": "原式=−[(1/3)²⁰¹⁴×3²⁰¹⁴]×3=−(1×3)=−3。"
+        "Analysis": "原式=−[(1/3)²⁰¹⁴×3²⁰¹⁴]×3=−(1×3)=−3。",
+        "Pitfall": "坑点：指数差 1 时，把高次幂拆成'同指数部分×多出来的一个底数'：(1/3)²⁰¹⁴×3²⁰¹⁴=1，再乘剩下的 3。"
     },
     {
         "Title": "（P25 一、8）计算：(−m³)²·(−n²)³",
@@ -690,7 +766,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #书写规范",
-        "Analysis": "(−m³)²·(−n²)³=m⁶·(−n⁶)=−m⁶n⁶。"
+        "Analysis": "(−m³)²·(−n²)³=m⁶·(−n⁶)=−m⁶n⁶。",
+        "Pitfall": "坑点：结果要写成规范单项式 −m⁶n⁶，不要保留乘号或括号。"
     },
     {
         "Title": "（P25 一、7 第三空）x³⁰=x³·(x²⁷)=(x³·(x¹²))²=[x·(−x³)·( )]³",
@@ -699,7 +776,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#幂的乘方逆用 #符号",
-        "Analysis": "第三空填 −x⁶。"
+        "Analysis": "第三空填 −x⁶。",
+        "Pitfall": "坑点：这类题的套路是'反推括号内的整体幂次'：先算出括号内应该等于 x的多少次方，再凑出缺的那一项。"
     },
     {
         "Title": "（P25 一、4）计算：−[−(x/3)²]²",
@@ -708,7 +786,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#积的乘方 #多重符号",
-        "Analysis": "−(1/81)x⁴。"
+        "Analysis": "−(1/81)x⁴。",
+        "Pitfall": "坑点：多层括号从里往外算：内层 (x/3)²=(1/9)x² → 中层 −(1/9)x² → 平方得 (1/81)x⁴ → 最外层负号 → −(1/81)x⁴。"
     },
     {
         "Title": "（P21 云阶梯5②）计算：(−2)¹⁰⁰+(−2)⁹⁹",
@@ -717,7 +796,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#提公因式 #幂的运算",
-        "Analysis": "(−2)⁹⁹×(−1)=−2⁹⁹×(−1)=2⁹⁹。"
+        "Analysis": "(−2)⁹⁹×(−1)=−2⁹⁹×(−1)=2⁹⁹。",
+        "Pitfall": "坑点：高次幂相加先提低次幂作公因式：(−2)¹⁰⁰+(−2)⁹⁹=(−2)⁹⁹×[(−2)+1]。奇数次的 (−2)⁹⁹=−2⁹⁹。"
     },
     {
         "Title": "（P21 云阶梯4）已知 x^(a+b)·x^(2b−a)=x⁹，求 (−2)ᵇ−(−2)ᵇ 的值",
@@ -726,7 +806,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#同底数幂乘法 #相同项相减",
-        "Analysis": "b=3 → (−2)³−(−2)³=0。"
+        "Analysis": "b=3 → (−2)³−(−2)³=0。",
+        "Pitfall": "坑点：两个完全相同的数相减，结果直接为 0，不用真的算出 −8。"
     },
     {
         "Title": "（P21 云阶梯2）已知 2ᵐ·2ⁿ=16，求 4(m+n)² 的值",
@@ -735,7 +816,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#同底数幂乘法 #整体代入",
-        "Analysis": "m+n=4 → 4(m+n)²=4×4²=4×16=64。"
+        "Analysis": "m+n=4 → 4(m+n)²=4×4²=4×16=64。",
+        "Pitfall": "坑点：条件给的是'积'，要用同底数幂乘法先化成 m+n 这个整体；求值式里出现 (m+n)²，直接代 4。"
     },
     {
         "Title": "（P20 4(1)）先化简再求值：5x²−(2x²+x−1)+(2−2x²−3x)，其中 x=−1/2",
@@ -744,7 +826,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#化简求值 #负号运算",
-        "Analysis": "(1/4)+2+3=21/4（即 5¼）。"
+        "Analysis": "(1/4)+2+3=21/4（即 5¼）。",
+        "Pitfall": "坑点：(−1/2)²=1/4 是正数；−4×(−1/2)=+2。逐项写清楚再通分。"
     },
     {
         "Title": "（P20 3(11)）计算：(a−b)³·(b−a)⁴+(a−b)⁶·(b−a)",
@@ -753,7 +836,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#相反数底数换底 #奇次幂提负号",
-        "Analysis": "(a−b)³·(a−b)⁴+(a−b)⁶·[−(a−b)]=(a−b)⁷−(a−b)⁷=0。"
+        "Analysis": "(a−b)³·(a−b)⁴+(a−b)⁶·[−(a−b)]=(a−b)⁷−(a−b)⁷=0。",
+        "Pitfall": "坑点：换底时符号跟着指数走——偶数次不变号，奇数次要提一个负号出来。"
     },
     {
         "Title": "（P20 3(10)）计算：−a³·a⁶+2a⁴·a²·a³−3a⁷",
@@ -762,7 +846,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#同底数幂乘法 #合并同类项",
-        "Analysis": "a⁹−3a⁷。"
+        "Analysis": "a⁹−3a⁷。",
+        "Pitfall": "坑点：a⁹ 与 a⁷ 指数不同，不是同类项，不能再合并——这是本题最容易多写一步的地方。"
     },
     {
         "Title": "（P20 3(9)）计算：(−a)²·(−a)+(−a)·(−a²)",
@@ -771,7 +856,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#同底数幂乘法 #符号运算",
-        "Analysis": "原式=−a³+a³=0。"
+        "Analysis": "原式=−a³+a³=0。",
+        "Pitfall": "坑点：逐项先定符号再相乘。(−a)² 是正 a²，再乘 (−a) 得 −a³；(−a)·(−a²) 负负得正为 a³，两者恰好抵消。"
     },
     {
         "Title": "（P20 3(7)）计算：(x+y)⁵·(−x−y)²·(x+y)⁴",
@@ -780,7 +866,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#底数互为相反数 #偶次幂换底",
-        "Analysis": "(x+y)⁵·(x+y)²·(x+y)⁴=(x+y)¹¹。"
+        "Analysis": "(x+y)⁵·(x+y)²·(x+y)⁴=(x+y)¹¹。",
+        "Pitfall": "坑点：底数互为相反数时，偶次幂可直接换底（去负号），奇次幂换底要提一个负号。"
     },
     {
         "Title": "（P20 3(5)）计算：−(−x)³·(−x)⁴·(−x)³",
@@ -789,7 +876,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#同底数幂乘法 #多重负号",
-        "Analysis": "−x¹⁰。"
+        "Analysis": "−x¹⁰。",
+        "Pitfall": "坑点：先数负号——最外层 1 个负号，(−x)³ 贡献 1 个负号，共 2 个？不，按指数法则先合并底数再定符号：指数 10 是偶数 → (−x)¹⁰=x¹⁰，再乘最外层负号 → −x¹⁰。"
     },
     {
         "Title": "（P19 选择2）下列运算正确的是（ ）",
@@ -798,7 +886,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#同底数幂的乘法 #合并同类项",
-        "Analysis": "选 D：(x−2y)²·(2y−x)³=(2y−x)²⁺³=(2y−x)⁵。"
+        "Analysis": "选 D：(x−2y)²·(2y−x)³=(2y−x)²⁺³=(2y−x)⁵。",
+        "Pitfall": "坑点：a⁵−a⁵=0（数值 0）；只有同底数幂相除 a⁵÷a⁵ 才等于 a⁰=1。另外 (x−2y)²=(2y−x)² 是偶次幂换底的关键。"
     },
     {
         "Title": "（单元练习十 19(2)）化简求值：5xy−(9/4)x²y−(9/4)xy+(1/2)x²y，其中 x=1，y=−2",
@@ -807,7 +896,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#合并同类项 #分数系数 #代入求值",
-        "Analysis": "原式=−2。"
+        "Analysis": "原式=−2。",
+        "Pitfall": "坑点：代入 (11/4)(1)(−2)=−22/4=−11/2，(7/4)(1)(−2)=−14/4=−7/2，再做 −11/2−(−7/2)=−4/2=−2。"
     },
     {
         "Title": "（单元练习十 18）整式 x³+1 与 x³−1 的差是__",
@@ -816,7 +906,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式的差 #去括号变号",
-        "Analysis": "(x³+1)−(x³−1)=2。"
+        "Analysis": "(x³+1)−(x³−1)=2。",
+        "Pitfall": "坑点：'A 与 B 的差' 是 A−B，第二个整式要整体加括号再变号，否则会算成 0。"
     },
     {
         "Title": "（单元练习十 18）整式 2x、−5x²+3x、−2x−1 的和是__",
@@ -825,7 +916,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式的和 #合并同类项",
-        "Analysis": "(2x)+(−5x²+3x)+(−2x−1)=−5x²+3x−1。"
+        "Analysis": "(2x)+(−5x²+3x)+(−2x−1)=−5x²+3x−1。",
+        "Pitfall": "坑点：求和先把三个整式都用括号括起来相加，再逐项合并：2x+3x−2x=3x。"
     },
     {
         "Title": "（单元练习十 17）n=__ 时，式子 x^(2n+1)y−x⁵y²+6 是 8 次三项式",
@@ -834,7 +926,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#多项式的次数 #指数方程",
-        "Analysis": "2n+2=8 → n=3。"
+        "Analysis": "2n+2=8 → n=3。",
+        "Pitfall": "坑点：字母没写指数时默认是 1，x^(2n+1)y 的次数是 2n+2，别忘了那个隐含的 1。"
     },
     {
         "Title": "（单元练习十 16）a=__ 时，式子 3a−b+9 化简后是单项式",
@@ -843,7 +936,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#单项式 #消去常数项",
-        "Analysis": "3a+9=0 → a=−3。"
+        "Analysis": "3a+9=0 → a=−3。",
+        "Pitfall": "坑点：'化简后是单项式' = 没有常数项 → 令常数部分为 0，解得 a=−3。"
     },
     {
         "Title": "（单元练习十 15）ax−by−cx−dy=(a−c)x−( )y",
@@ -852,7 +946,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#提取负号 #添括号法则",
-        "Analysis": "(a−c)x−(b+d)y。"
+        "Analysis": "(a−c)x−(b+d)y。",
+        "Pitfall": "坑点：添括号时括号前是负号，括号里每一项都要变号：−by−dy=−(b+d)y。"
     },
     {
         "Title": "（单元练习十 14）(6a²−5a+4)−( )=7a²−3，求括号内的整式",
@@ -861,7 +956,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#整式减法 #去括号变号",
-        "Analysis": "M=6a²−5a+4−7a²+3=−a²−5a+7。"
+        "Analysis": "M=6a²−5a+4−7a²+3=−a²−5a+7。",
+        "Pitfall": "坑点：求'被减去的整式'要把减法倒过来算，减的时候第二个括号要整体变号：−(7a²−3)=−7a²+3。"
     },
     {
         "Title": "（单元练习十 二、8）多项式 3x²−4x³−2 的三次项是__，一次项系数是__",
@@ -870,7 +966,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#缺失项的系数",
-        "Analysis": "三次项 −4x³；一次项系数 0。"
+        "Analysis": "三次项 −4x³；一次项系数 0。",
+        "Pitfall": "坑点：式中没有的项，系数写 0，不要留空或乱写。"
     },
     {
         "Title": "（单元练习十 二、7）多项式 −(7/8)x²y⁵+(4/5)x³y⁴−y+1+y² 的一次项系数是__",
@@ -879,7 +976,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#多项式的项 #系数符号",
-        "Analysis": "一次项系数为 −1。"
+        "Analysis": "一次项系数为 −1。",
+        "Pitfall": "坑点：单项式 −y 的系数是 −1，别把负号丢掉；写系数时连符号一起写。"
     },
     {
         "Title": "（单元练习十 一、3）m,n 是正整数，多项式 xᵐ−2yⁿ+3m+n 的次数是（ ）",
@@ -888,7 +986,8 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#常数项的次数 #多项式的次数",
-        "Analysis": "次数取决于 xᵐ 与 −2yⁿ 中较大者 → 选 D。"
+        "Analysis": "次数取决于 xᵐ 与 −2yⁿ 中较大者 → 选 D。",
+        "Pitfall": "坑点：字母若在题干中被定义为常数（'m,n 是正整数'），它在式子中就不再是变量，整项次数为 0。"
     },
     {
         "Title": "（P10.3 三）已知 xy=−2，x−y=3，求 (3xy+10y)+[5x−(2xy+2y−3x)] 的值",
@@ -897,6 +996,7 @@
         "ReviewDate": "",
         "Reason": "",
         "Knowledge": "#去括号 #整体代入",
-        "Analysis": "若条件为 x+y=3、xy=−2，则原式=−2+8×3=22。"
+        "Analysis": "若条件为 x+y=3、xy=−2，则原式=−2+8×3=22。",
+        "Pitfall": "坑点：化简后是 xy+8x+8y，需要的是 x+y 这个整体；若题给的是 x−y，需回看原卷题干是否抄错。"
     }
 ]
