@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coco 的错题本</title>
     <style>
-        /* 大屏适配：适当加宽最大宽度至 1280px，支持双列网格舒展 */
+        /* 基础页面排版 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: #ededed;
@@ -15,7 +15,7 @@
             padding: 40px 30px;
         }
 
-        /* 顶部横幅：左侧文字“错题本”，右侧切换开关（Coco 高亮） */
+        /* 顶部横幅 */
         .top-banner {
             background-color: #f4f4f4;
             border: 1px solid #dcdcdc;
@@ -66,7 +66,7 @@
             color: #1a1a1a;
         }
 
-        /* 底部深色质感卡片：完美严格居中对齐 */
+        /* 底部深色质感卡片 */
         .bottom-banner {
             background-color: #262626;
             color: #ffffff;
@@ -153,10 +153,10 @@
             letter-spacing: 0.5px;
         }
         
-        /* ⭐️ 大屏双列自适应网格布局（窄屏自动单列下沉） */
+        /* ⭐️ 响应式网格：电脑端双列，手机端自动单列 */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(540px, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 24px;
         }
 
@@ -245,6 +245,20 @@
             padding: 2px 8px;
             border-radius: 4px;
             font-weight: 500;
+        }
+
+        /* 📱 移动端适配媒体查询：屏幕宽度 <= 768px 时 */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 15px 12px;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr; /* 强制单列 */
+                gap: 16px;
+            }
+            .top-banner {
+                padding: 14px 18px;
+            }
         }
     </style>
 </head>
@@ -345,7 +359,6 @@
                     const items = groupedData[subject];
                     htmlOutput += '<div class="subject-group">';
                     htmlOutput += '<div class="subject-title">📖 ' + subject + ' (' + items.length + ' 题)</div>';
-                    // ⭐️ 双列网格包裹容器
                     htmlOutput += '<div class="cards-grid">';
                     
                     for (let i = 0; i < items.length; i++) {
@@ -378,7 +391,7 @@
                         htmlOutput += '</div>';
                         htmlOutput += '</div>';
                     }
-                    htmlOutput += '</div>'; // cards-grid 结束
+                    htmlOutput += '</div>';
                     htmlOutput += '</div>';
                 }
             }
