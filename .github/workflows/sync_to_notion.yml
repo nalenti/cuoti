@@ -3,9 +3,10 @@ name: Sync GitHub Markdown to Notion
 on:
   push:
     branches:
-      - main  # 如果你的默认分支是 master，请修改为 master
+      - main
     paths:
-      - 'study/**.md'  # 只有当 study 目录下的 md 文件有变动时才触发
+      - 'study/**.md'
+  workflow_dispatch:  # <--- 加上这一行，就会在网页上出现“Run workflow”按钮！
 
 jobs:
   sync-to-notion:
